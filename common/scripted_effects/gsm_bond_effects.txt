@@ -1,0 +1,246 @@
+gsm_tick_credit = {
+	set_variable = { which = gsm_credit value = 2 }
+	set_variable = { which = gsm_bond_rate value = @gsm_bond_rate_mid }
+	set_variable = { which = gsm_bond_cap value = @gsm_bond_cap_mid }
+	if = {
+		limit = { check_variable = { which = gsm_regime value = 1 } }
+		set_variable = { which = gsm_credit value = 1 }
+		set_variable = { which = gsm_bond_rate value = @gsm_bond_rate_bull }
+		set_variable = { which = gsm_bond_cap value = @gsm_bond_cap_bull }
+	}
+	if = {
+		limit = { check_variable = { which = gsm_regime value = 3 } }
+		set_variable = { which = gsm_credit value = 3 }
+		set_variable = { which = gsm_bond_rate value = @gsm_bond_rate_bear }
+		set_variable = { which = gsm_bond_cap value = @gsm_bond_cap_bear }
+	}
+	set_variable = { which = gsm_d_bond_rate value = gsm_bond_rate }
+	multiply_variable = { which = gsm_d_bond_rate value = 100 }
+	round_variable_to_closest = { which = gsm_d_bond_rate value = 0.1 }
+}
+gsm_bond_lender_find = {
+	set_variable = { which = gsm_t_has_blend value = 0 }
+	if = {
+		limit = { is_variable_set = gsm_debt_iid check_variable = { which = gsm_debt_iid value >= 1 } }
+		save_event_target_as = gsm_t_bco
+		every_playable_country = {
+			limit = { gsm_has_iid = yes check_variable = { which = gsm_iid value = event_target:gsm_t_bco.gsm_debt_iid } }
+			save_event_target_as = gsm_t_blend
+			event_target:gsm_t_bco = { set_variable = { which = gsm_t_has_blend value = 1 } }
+		}
+	}
+}
+gsm_bond_add = {
+	gsm_default = { VAR = gsm_debt VALUE = 0 }
+	gsm_default = { VAR = gsm_debt_r VALUE = 0 }
+	set_variable = { which = gsm_t_x value = gsm_debt }
+	multiply_variable = { which = gsm_t_x value = gsm_debt_r }
+	set_variable = { which = gsm_t_y value = gsm_t_bamt }
+	multiply_variable = { which = gsm_t_y value = event_target:gsm_exchange.gsm_bond_rate }
+	change_variable = { which = gsm_t_x value = gsm_t_y }
+	change_variable = { which = gsm_debt value = gsm_t_bamt }
+	set_variable = { which = gsm_debt_r value = gsm_t_x }
+	gsm_div_safe = { VAR = gsm_debt_r BY = gsm_debt }
+	set_variable = { which = gsm_debt_due value = event_target:gsm_exchange.gsm_month }
+	change_variable = { which = gsm_debt_due value = @gsm_bond_months }
+	set_variable = { which = gsm_debt_iid value = event_target:gsm_t_home.gsm_iid }
+	change_variable = { which = gsm_cash value = gsm_t_bamt }
+	event_target:gsm_t_home = {
+		gsm_default = { VAR = gsm_pcap VALUE = 0 }
+		subtract_variable = { which = gsm_pcap value = prev.gsm_t_bamt }
+	}
+}
+gsm_bond_room = {
+	set_variable = { which = gsm_t_broom value = 0 }
+	set_variable = { which = gsm_t_bthr value = 1 }
+	gsm_default = { VAR = gsm_debt VALUE = 0 }
+	if = {
+		limit = {
+			check_variable = { which = gsm_t_has_home value = 1 }
+			check_variable = { which = gsm_cash value >= 0 }
+			NOT = { has_country_flag = gsm_st }
+			NOT = { has_country_flag = gsm_distress }
+			NOT = { AND = { is_variable_set = gsm_rs check_variable = { which = gsm_rs value = 2 } } }
+			NOT = { has_country_flag = gsm_neutral }
+			OR = {
+				check_variable = { which = gsm_debt value <= 0 }
+				check_variable = { which = gsm_debt_iid value = event_target:gsm_t_home.gsm_iid }
+			}
+		}
+		gsm_company_tax_rate = yes
+		set_variable = { which = gsm_t_bthr value = event_target:gsm_exchange.gsm_bond_rate }
+		divide_variable = { which = gsm_t_bthr value = 12 }
+		set_variable = { which = gsm_t_x value = 1 }
+		subtract_variable = { which = gsm_t_x value = gsm_t_taxr }
+		multiply_variable = { which = gsm_t_bthr value = gsm_t_x }
+		change_variable = { which = gsm_t_bthr value = @gsm_hurdle_roa }
+		set_variable = { which = gsm_t_broom value = gsm_k }
+		multiply_variable = { which = gsm_t_broom value = event_target:gsm_exchange.gsm_bond_cap }
+		subtract_variable = { which = gsm_t_broom value = gsm_debt }
+		event_target:gsm_t_home = { gsm_default = { VAR = gsm_pcap VALUE = 0 } }
+		set_variable = { which = gsm_t_x value = event_target:gsm_t_home.gsm_pcap }
+		multiply_variable = { which = gsm_t_x value = 0.5 }
+		gsm_clamp_max = { VAR = gsm_t_broom MAX = gsm_t_x }
+		gsm_clamp_min = { VAR = gsm_t_broom MIN = 0 }
+	}
+}
+gsm_invest_draw = {
+	if = {
+		limit = {
+			check_variable = { which = gsm_t_need value > 0 }
+			check_variable = { which = gsm_t_bcash value > 0 }
+		}
+		set_variable = { which = gsm_t_x value = gsm_t_need }
+		gsm_clamp_max = { VAR = gsm_t_x MAX = gsm_t_bcash }
+		change_variable = { which = gsm_t_left value = gsm_t_x }
+		subtract_variable = { which = gsm_t_bcash value = gsm_t_x }
+		subtract_variable = { which = gsm_t_need value = gsm_t_x }
+	}
+	if = {
+		limit = {
+			check_variable = { which = gsm_t_need value > 0 }
+			check_variable = { which = gsm_t_broom value >= gsm_t_unitk }
+			check_variable = { which = gsm_t_dcn value >= gsm_t_bthr }
+			check_variable = { which = gsm_t_has_home value = 1 }
+			NOT = { has_country_flag = gsm_distress }
+		}
+		set_variable = { which = gsm_t_bamt value = gsm_t_need }
+		gsm_clamp_max = { VAR = gsm_t_bamt MAX = gsm_t_broom }
+		gsm_bond_add = yes
+		change_variable = { which = gsm_t_left value = gsm_t_bamt }
+		subtract_variable = { which = gsm_t_broom value = gsm_t_bamt }
+		if = {
+			limit = { check_variable = { which = gsm_t_broom value < gsm_t_unitk } }
+			set_variable = { which = gsm_t_broom value = 0 }
+		}
+		if = {
+			limit = { has_global_flag = gsm_debug_log }
+			log = "GALMARKET_COMPANY: a company issued a bond"
+		}
+	}
+}
+gsm_bond_interest = {
+	if = {
+		limit = { is_variable_set = gsm_debt check_variable = { which = gsm_debt value > 0 } }
+		set_variable = { which = gsm_t_bint value = gsm_debt }
+		multiply_variable = { which = gsm_t_bint value = gsm_debt_r }
+		divide_variable = { which = gsm_t_bint value = 12 }
+		change_variable = { which = gsm_int value = gsm_t_bint }
+		gsm_bond_lender_find = yes
+		if = {
+			limit = { check_variable = { which = gsm_t_has_blend value = 1 } }
+			event_target:gsm_t_blend = {
+				gsm_default = { VAR = gsm_pcap VALUE = 0 }
+				change_variable = { which = gsm_pcap value = prev.gsm_t_bint }
+			}
+		}
+	}
+}
+gsm_bond_repay = {
+	if = {
+		limit = { is_variable_set = gsm_debt check_variable = { which = gsm_debt value > 0 } check_variable = { which = gsm_t_brep value > 0 } }
+		gsm_clamp_max = { VAR = gsm_t_brep MAX = gsm_debt }
+		subtract_variable = { which = gsm_cash value = gsm_t_brep }
+		subtract_variable = { which = gsm_debt value = gsm_t_brep }
+		gsm_bond_lender_find = yes
+		if = {
+			limit = { check_variable = { which = gsm_t_has_blend value = 1 } }
+			event_target:gsm_t_blend = {
+				gsm_default = { VAR = gsm_pcap VALUE = 0 }
+				change_variable = { which = gsm_pcap value = prev.gsm_t_brep }
+			}
+		}
+	}
+}
+gsm_bond_maturity = {
+	if = {
+		limit = {
+			is_variable_set = gsm_debt
+			check_variable = { which = gsm_debt value > 0 }
+			check_variable = { which = gsm_debt_due value <= event_target:gsm_exchange.gsm_month }
+		}
+		set_variable = { which = gsm_t_x value = gsm_k }
+		multiply_variable = { which = gsm_t_x value = event_target:gsm_exchange.gsm_bond_cap }
+		if = {
+			limit = { check_variable = { which = gsm_cash value >= gsm_debt } }
+			set_variable = { which = gsm_t_brep value = gsm_debt }
+			gsm_bond_repay = yes
+		}
+		else_if = {
+			limit = { has_country_flag = gsm_distress }
+			set_variable = { which = gsm_debt_r value = event_target:gsm_exchange.gsm_bond_rate }
+			set_variable = { which = gsm_debt_due value = event_target:gsm_exchange.gsm_month }
+			change_variable = { which = gsm_debt_due value = @gsm_bond_ext_months }
+		}
+		else_if = {
+			limit = {
+				NOT = { has_country_flag = gsm_st }
+			}
+			if = {
+				limit = { check_variable = { which = gsm_debt value > gsm_t_x } }
+				gsm_company_reserve = yes
+				set_variable = { which = gsm_t_brep value = gsm_cash }
+				subtract_variable = { which = gsm_t_brep value = gsm_t_reserve }
+				set_variable = { which = gsm_t_bexc value = gsm_debt }
+				subtract_variable = { which = gsm_t_bexc value = gsm_t_x }
+				gsm_clamp_max = { VAR = gsm_t_brep MAX = gsm_t_bexc }
+				gsm_clamp_min = { VAR = gsm_t_brep MIN = 0 }
+				gsm_bond_repay = yes
+			}
+			set_variable = { which = gsm_debt_r value = event_target:gsm_exchange.gsm_bond_rate }
+			set_variable = { which = gsm_debt_due value = event_target:gsm_exchange.gsm_month }
+			if = {
+				limit = { check_variable = { which = gsm_debt value <= gsm_t_x } }
+				change_variable = { which = gsm_debt_due value = @gsm_bond_months }
+			}
+			else = {
+				set_variable = { which = gsm_t_bexc value = gsm_debt }
+				subtract_variable = { which = gsm_t_bexc value = gsm_t_x }
+				gsm_div_safe = { VAR = gsm_t_bexc BY = gsm_debt }
+				multiply_variable = { which = gsm_t_bexc value = @gsm_bond_penalty }
+				change_variable = { which = gsm_debt_r value = gsm_t_bexc }
+				change_variable = { which = gsm_debt_due value = @gsm_bond_ext_months }
+				if = {
+					limit = { has_global_flag = gsm_debug_log }
+					log = "GALMARKET_COMPANY: a maturing bond over the credit cap rolled over in part, the unpaid excess at the penalty rate"
+				}
+			}
+		}
+		else = {
+			set_variable = { which = gsm_t_brep value = gsm_cash }
+			gsm_clamp_min = { VAR = gsm_t_brep MIN = 0 }
+			gsm_bond_repay = yes
+			if = {
+				limit = { check_variable = { which = gsm_debt value > 0 } }
+				set_variable = { which = gsm_debt_r value = event_target:gsm_exchange.gsm_bond_rate }
+				change_variable = { which = gsm_debt_r value = @gsm_bond_penalty }
+				set_variable = { which = gsm_debt_due value = event_target:gsm_exchange.gsm_month }
+				change_variable = { which = gsm_debt_due value = @gsm_bond_ext_months }
+			}
+		}
+	}
+}
+gsm_bond_lender_lost = {
+	set_variable = { which = gsm_t_blid value = gsm_debt_iid }
+	set_variable = { which = gsm_debt_iid value = 0 }
+	gsm_company_peek_home = yes
+	if = {
+		limit = {
+			check_variable = { which = gsm_t_has_home value = 1 }
+			event_target:gsm_t_home = { gsm_has_iid = yes }
+			NOT = { check_variable = { which = gsm_t_blid value = event_target:gsm_t_home.gsm_iid } }
+		}
+		set_variable = { which = gsm_debt_iid value = event_target:gsm_t_home.gsm_iid }
+	}
+	else = {
+		set_variable = { which = gsm_debt value = 0 }
+		set_variable = { which = gsm_debt_r value = 0 }
+	}
+}
+gsm_debug_bond = {
+	gsm_company_peek_home = yes
+	if = {
+		limit = { check_variable = { which = gsm_t_has_home value = 1 } }
+		gsm_bond_add = yes
+	}
+}

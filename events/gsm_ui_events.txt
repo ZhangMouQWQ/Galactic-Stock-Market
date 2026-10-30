@@ -1,0 +1,9 @@
+namespace = gsm_ui
+country_event = {
+	id = gsm_ui.900
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_ui_open_terminal = yes
+	}
+}

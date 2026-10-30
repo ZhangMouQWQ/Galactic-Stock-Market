@@ -1,0 +1,3 @@
+gsm_trade_vault = {
+	country_resource_max_trade_add = 999950000
+}

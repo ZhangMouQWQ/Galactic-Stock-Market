@@ -1,0 +1,301 @@
+gsm_company_csub_settle = {
+	set_variable = { which = gsm_csub_m value = 0 }
+	set_variable = { which = gsm_csub_x_m value = 0 }
+	if = {
+		limit = { has_country_flag = gsm_csub }
+		country_event = { id = gsm_fn.50 }
+	}
+	set_variable = { which = gsm_np_d value = gsm_np }
+	change_variable = { which = gsm_np_d value = gsm_csub_m }
+}
+gsm_company_csub_on = {
+	if = {
+		limit = {
+			is_variable_set = gsm_cpool
+			check_variable = { which = gsm_cpool value > 0 }
+			is_variable_set = gsm_cpool_iid
+			NOT = { check_variable = { which = gsm_cpool_iid value = event_target:gsm_t_actor.gsm_iid } }
+		}
+		gsm_cpool_refund = yes
+	}
+	set_variable = { which = gsm_csub_tier value = gsm_t_csubt }
+	set_variable = { which = gsm_csub_iid value = event_target:gsm_t_actor.gsm_iid }
+	if = {
+		limit = { NOT = { has_country_flag = gsm_csub } }
+		set_country_flag = gsm_csub
+		gsm_news_push = { TYPE = 28 NOTIFY_STAKE = yes }
+	}
+	set_variable = { which = gsm_t_hsub value = 1 }
+	gsm_company_csub_slot = yes
+	if = {
+		limit = { has_global_flag = gsm_debug_log }
+		log = "GALMARKET_COMPANY: a company subsidy began or changed its tier"
+	}
+}
+gsm_company_csub_off = {
+	if = {
+		limit = { has_global_flag = gsm_debug_log }
+		if = {
+			limit = { NOT = { is_variable_set = gsm_t_cswhy } }
+			log = "GALMARKET_COMPANY: a company subsidy ended, reason not given"
+		}
+		else_if = {
+			limit = { check_variable = { which = gsm_t_cswhy value = 1 } }
+			log = "GALMARKET_COMPANY: a company subsidy ended, AI review: profitable over the last 12 months"
+		}
+		else_if = {
+			limit = { check_variable = { which = gsm_t_cswhy value = 2 } }
+			log = "GALMARKET_COMPANY: a company subsidy ended, AI review: the controller's Trade covers less than 6 months of the loss"
+		}
+		else_if = {
+			limit = { check_variable = { which = gsm_t_cswhy value = 3 } }
+			log = "GALMARKET_COMPANY: a company subsidy ended, AI review: wound up under register pressure"
+		}
+		else_if = {
+			limit = { check_variable = { which = gsm_t_cswhy value = 4 } }
+			log = "GALMARKET_COMPANY: a company subsidy ended, monthly settlement: no control, no capital or the payer short"
+		}
+		else_if = {
+			limit = { check_variable = { which = gsm_t_cswhy value = 5 } }
+			log = "GALMARKET_COMPANY: a company subsidy ended, stopped by its payer"
+		}
+		else = {
+			log = "GALMARKET_COMPANY: a company subsidy ended, reason not given"
+		}
+	}
+	set_variable = { which = gsm_t_cswhy value = 0 }
+	if = {
+		limit = { has_country_flag = gsm_csub }
+		remove_country_flag = gsm_csub
+		gsm_news_push = { TYPE = 29 NOTIFY_STAKE = yes }
+	}
+	set_variable = { which = gsm_csub_iid value = 0 }
+	set_variable = { which = gsm_csub_tier value = 0 }
+	if = {
+		limit = {
+			NOT = { AND = { is_variable_set = gsm_t_cskeep check_variable = { which = gsm_t_cskeep value = 1 } } }
+		}
+		gsm_cpool_refund = yes
+	}
+	set_variable = { which = gsm_t_cskeep value = 0 }
+	set_variable = { which = gsm_t_hsub value = 0 }
+	gsm_company_csub_slot = yes
+	if = { limit = { is_variable_set = gsm_csub_pm } clear_variable = gsm_csub_pm }
+}
+gsm_company_csub_end = {
+	remove_country_flag = gsm_csub
+	gsm_cpool_refund = yes
+	if = { limit = { is_variable_set = gsm_csub_pm } clear_variable = gsm_csub_pm }
+}
+gsm_company_csub_slot = {
+	event_target:gsm_exchange = {
+		set_variable = { which = gsm_t_slot value = prev.gsm_slot }
+		set_variable = { which = gsm_t_hsub value = prev.gsm_t_hsub }
+		gsm_gen_slot_set_sub = yes
+	}
+}
+gsm_cpool_refund = {
+	if = {
+		limit = { is_variable_set = gsm_cpool check_variable = { which = gsm_cpool value > 0 } }
+		save_event_target_as = gsm_t_cpco
+		set_variable = { which = gsm_t_cpfd value = 0 }
+		if = {
+			limit = { is_variable_set = gsm_cpool_iid }
+			every_playable_country = {
+				limit = { gsm_has_iid = yes check_variable = { which = gsm_iid value = event_target:gsm_t_cpco.gsm_cpool_iid } }
+				set_variable = { which = gsm_t_pay value = event_target:gsm_t_cpco.gsm_cpool }
+				add_resource = { trade = 1 mult = gsm_t_pay }
+				event_target:gsm_t_cpco = { set_variable = { which = gsm_t_cpfd value = 1 } }
+			}
+		}
+		if = {
+			limit = { check_variable = { which = gsm_t_cpfd value = 0 } has_global_flag = gsm_debug_log }
+			log = "GALMARKET_COMPANY: an investment pool was voided, its payer is gone"
+		}
+		set_variable = { which = gsm_cpool value = 0 }
+	}
+}
+gsm_ai_csub_review = {
+	event_target:gsm_t_trader = { save_event_target_as = gsm_t_actor }
+	gsm_company_actor_rights = yes
+	if = {
+		limit = {
+			check_variable = { which = gsm_t_actl value = 1 }
+			check_variable = { which = gsm_k value >= 1 }
+			NOT = { has_country_flag = gsm_neutral }
+		}
+		set_variable = { which = gsm_t_csl value = gsm_np_ly }
+		multiply_variable = { which = gsm_t_csl value = -1 }
+		set_variable = { which = gsm_t_cstr value = event_target:gsm_t_trader.gsm_t_csav }
+		if = {
+			limit = { has_country_flag = gsm_csub }
+			set_variable = { which = gsm_t_x value = gsm_t_csl }
+			multiply_variable = { which = gsm_t_x value = @gsm_ai_csub_stop }
+			if = {
+				limit = {
+					OR = {
+						check_variable = { which = gsm_np_ly value >= 0 }
+						check_variable = { which = gsm_t_cstr value < gsm_t_x }
+						has_country_flag = gsm_press_wd
+					}
+				}
+				if = { limit = { has_country_flag = gsm_press_wd } set_variable = { which = gsm_t_csrv value = 3 } }
+				else_if = { limit = { check_variable = { which = gsm_np_ly value >= 0 } } set_variable = { which = gsm_t_csrv value = 1 } }
+				else = { set_variable = { which = gsm_t_csrv value = 2 } }
+				set_variable = { which = gsm_t_cswhy value = gsm_t_csrv }
+				set_variable = { which = gsm_t_cskeep value = 0 }
+				gsm_company_csub_off = yes
+			}
+		}
+		else = {
+			set_variable = { which = gsm_t_gst value = 0 }
+			if = {
+				limit = { check_variable = { which = gsm_t_has_home value = 1 } event_target:gsm_t_home = { is_gestalt = yes } }
+				set_variable = { which = gsm_t_gst value = 1 }
+			}
+			set_variable = { which = gsm_t_x value = gsm_t_csl }
+			multiply_variable = { which = gsm_t_x value = @gsm_ai_csub_cover }
+			set_variable = { which = gsm_t_y value = gsm_t_x }
+			change_variable = { which = gsm_t_y value = @gsm_ai_found_reserve }
+			if = {
+				limit = {
+					check_variable = { which = gsm_np_ly value < 0 }
+					check_variable = { which = gsm_t_cstr value >= gsm_t_y }
+					NOT = { has_country_flag = gsm_press_wd }
+					gsm_gen_ai_sub_ind = yes
+				}
+				set_variable = { which = gsm_t_csubt value = 0 }
+				set_variable = { which = gsm_t_y value = gsm_k }
+				multiply_variable = { which = gsm_t_y value = @gsm_csub_x1 }
+				change_variable = { which = gsm_t_y value = gsm_t_csl }
+				multiply_variable = { which = gsm_t_y value = @gsm_ai_csub_cover }
+				change_variable = { which = gsm_t_y value = @gsm_ai_csub_t1_reserve }
+				if = {
+					limit = { check_variable = { which = gsm_t_cstr value >= gsm_t_y } }
+					set_variable = { which = gsm_t_csubt value = 1 }
+				}
+				if = {
+					limit = {
+						OR = {
+							check_variable = { which = gsm_t_csubt value >= 1 }
+							NOT = { has_country_flag = gsm_distress }
+						}
+					}
+					gsm_company_csub_on = yes
+					event_target:gsm_t_trader = { subtract_variable = { which = gsm_t_csav value = prev.gsm_t_x } }
+				}
+			}
+		}
+	}
+}
+gsm_csub_x_accel = {
+	set_variable = { which = gsm_t_cpxs value = event_target:gsm_t_site.gsm_t_cpx }
+	if = {
+		limit = { has_country_flag = gsm_csub gsm_gen_site_sub_ok = yes }
+		set_variable = { which = gsm_t_csxa value = 0 }
+		if = {
+			limit = { is_variable_set = gsm_csub_pm }
+			set_variable = { which = gsm_t_x value = event_target:gsm_exchange.gsm_month }
+			subtract_variable = { which = gsm_t_x value = gsm_csub_pm }
+			if = {
+				limit = { check_variable = { which = gsm_t_x value < @gsm_sub_x_paid_months } }
+				set_variable = { which = gsm_t_csxa value = 1 }
+			}
+		}
+		if = {
+			limit = { is_variable_set = gsm_cpool check_variable = { which = gsm_cpool value > 0 } }
+			set_variable = { which = gsm_t_csxa value = 1 }
+		}
+		if = {
+			limit = { check_variable = { which = gsm_t_csxa value = 0 } }
+			gsm_gen_ppool_get = yes
+			if = {
+				limit = { check_variable = { which = gsm_t_ppv value > 0 } }
+				set_variable = { which = gsm_t_csxa value = 1 }
+			}
+		}
+		if = {
+			limit = { check_variable = { which = gsm_t_csxa value = 1 } }
+			multiply_variable = { which = gsm_t_cpxs value = @gsm_sub_x_mult }
+		}
+	}
+}
+gsm_pool_funds = {
+	gsm_gen_ppool_get = yes
+	if = {
+		limit = { is_variable_set = gsm_t_hcab check_variable = { which = gsm_t_hcab value = 1 } }
+		set_variable = { which = gsm_t_pfa value = gsm_t_ppv }
+	}
+	else_if = {
+		limit = { is_variable_set = gsm_cpool check_variable = { which = gsm_cpool value > 0 } }
+		change_variable = { which = gsm_t_pfa value = gsm_cpool }
+	}
+	if = {
+		limit = {
+			check_variable = { which = gsm_t_ppv value > 0 }
+			NOT = { AND = { is_variable_set = gsm_t_hcab check_variable = { which = gsm_t_hcab value = 1 } } }
+		}
+		set_variable = { which = gsm_t_pfb value = gsm_t_pfa }
+		change_variable = { which = gsm_t_pfb value = gsm_t_ppv }
+		set_variable = { which = gsm_t_pfx value = 1 }
+		subtract_variable = { which = gsm_t_pfx value = @gsm_ppool_draw }
+		divide_variable = { which = gsm_t_pfa value = gsm_t_pfx }
+		gsm_clamp_max = { VAR = gsm_t_pfa MAX = gsm_t_pfb }
+	}
+}
+gsm_pool_draw = {
+	gsm_gen_ppool_get = yes
+	set_variable = { which = gsm_t_pdraw value = gsm_t_amt }
+	if = {
+		limit = { NOT = { AND = { is_variable_set = gsm_t_hcab check_variable = { which = gsm_t_hcab value = 1 } } } }
+		multiply_variable = { which = gsm_t_pdraw value = @gsm_ppool_draw }
+	}
+	gsm_clamp_max = { VAR = gsm_t_pdraw MAX = gsm_t_ppv }
+	gsm_clamp_min = { VAR = gsm_t_pdraw MIN = 0 }
+	set_variable = { which = gsm_t_amt_own value = gsm_t_amt }
+	subtract_variable = { which = gsm_t_amt_own value = gsm_t_pdraw }
+	set_variable = { which = gsm_t_cdraw value = 0 }
+	if = {
+		limit = { is_variable_set = gsm_cpool check_variable = { which = gsm_cpool value > 0 } }
+		set_variable = { which = gsm_t_cdraw value = gsm_t_amt_own }
+		gsm_clamp_max = { VAR = gsm_t_cdraw MAX = gsm_cpool }
+	}
+	subtract_variable = { which = gsm_t_amt_own value = gsm_t_cdraw }
+}
+gsm_pool_take = {
+	if = {
+		limit = { check_variable = { which = gsm_t_cdraw value > 0 } }
+		subtract_variable = { which = gsm_cpool value = gsm_t_cdraw }
+		if = {
+			limit = { check_variable = { which = gsm_cpool value < 0 } }
+			set_variable = { which = gsm_cpool value = 0 }
+		}
+	}
+	if = {
+		limit = { check_variable = { which = gsm_t_pdraw value > 0 } }
+		gsm_gen_ppool_take = yes
+	}
+}
+gsm_ppool_pay_back = {
+	if = {
+		limit = { check_variable = { which = gsm_t_ppv value > 0 } }
+		save_event_target_as = gsm_t_ppsite
+		set_variable = { which = gsm_t_ppfd value = 0 }
+		if = {
+			limit = { is_variable_set = gsm_ppool_iid }
+			every_playable_country = {
+				limit = { gsm_has_iid = yes check_variable = { which = gsm_iid value = event_target:gsm_t_ppsite.gsm_ppool_iid } }
+				set_variable = { which = gsm_t_pay value = event_target:gsm_t_ppsite.gsm_t_ppv }
+				add_resource = { trade = 1 mult = gsm_t_pay }
+				event_target:gsm_t_ppsite = { set_variable = { which = gsm_t_ppfd value = 1 } }
+			}
+		}
+		if = {
+			limit = { check_variable = { which = gsm_t_ppfd value = 0 } has_global_flag = gsm_debug_log }
+			log = "GALMARKET_ASSET: a planet industry investment pool was voided, its payer is gone"
+		}
+	}
+}
+gsm_ppool_refund_all = {
+	gsm_gen_ppool_refund_all = yes
+}

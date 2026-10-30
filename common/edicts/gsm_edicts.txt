@@ -1,0 +1,24 @@
+gsm_market_watch = {
+	length = -1
+	icon = "GFX_edict_type_policy"
+	resources = {
+		category = edicts
+	}
+	potential = {
+		gsm_is_market_country = yes
+	}
+	effect = {
+		custom_tooltip = gsm_market_watch_tt
+		hidden_effect = {
+			gsm_sit_start = yes
+		}
+	}
+	on_disabled = {
+		hidden_effect = {
+			gsm_sit_stop = yes
+		}
+	}
+	ai_weight = {
+		weight = 0
+	}
+}

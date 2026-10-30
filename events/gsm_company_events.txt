@@ -1,0 +1,151 @@
+namespace = gsm_company
+country_event = {
+	id = gsm_company.50
+	title = gsm_company.50.name
+	desc = gsm_company.50.desc
+	picture = GFX_evt_board_meeting
+	show_sound = event_administrative_work
+	is_triggered_only = yes
+	trigger = {
+		exists = from
+		from = { has_country_flag = gsm_distress }
+	}
+	immediate = {
+		from = {
+			gsm_company_sync_home = yes
+			gsm_company_bailout_cost = yes
+			gsm_company_display = yes
+			set_variable = { which = gsm_d_bail value = gsm_t_bail_cost }
+			round_variable_to_closest = { which = gsm_d_bail value = 1 }
+			set_variable = { which = gsm_t_comp value = 0.3 }
+			gsm_company_nat_cost = yes
+			set_variable = { which = gsm_d_natcost value = gsm_t_nat_cost }
+			round_variable_to_closest = { which = gsm_d_natcost value = 1 }
+			root = {
+				set_variable = { which = gsm_t_bail_needed value = prev.gsm_t_bail_cost }
+				set_variable = { which = gsm_t_nat_needed value = prev.gsm_t_nat_cost }
+			}
+		}
+		change_variable = { which = gsm_t_nat_needed value = gsm_t_bail_needed }
+	}
+	option = {
+		name = gsm_company.50.a
+		ai_chance = { factor = 0 }
+		trigger = {
+			from = {
+				gsm_is_live_company = yes
+				has_country_flag = gsm_distress
+			}
+			resource_stockpile_compare = { resource = trade value >= 1 mult = gsm_t_bail_needed }
+		}
+		custom_tooltip = gsm_company.50.a.tooltip
+		hidden_effect = {
+			from = {
+				gsm_distress_case_check = yes
+				gsm_company_bailout_cost = yes
+				root = { set_variable = { which = gsm_t_bail_needed value = prev.gsm_t_bail_cost } }
+			}
+			if = {
+				limit = {
+					resource_stockpile_compare = { resource = trade value >= 1 mult = gsm_t_bail_needed }
+					from = { check_variable = { which = gsm_t_dcase value = 1 } }
+				}
+				from = { gsm_company_bailout = yes }
+			}
+		}
+	}
+	option = {
+		name = gsm_company.50.b
+		ai_chance = { factor = 0 }
+		trigger = {
+			from = {
+				gsm_is_live_company = yes
+				has_country_flag = gsm_distress
+				gsm_can_nationalise = yes
+			}
+			resource_stockpile_compare = { resource = trade value >= 1 mult = gsm_t_nat_needed }
+		}
+		custom_tooltip = gsm_company.50.b.tooltip
+		hidden_effect = {
+			from = {
+				gsm_distress_case_check = yes
+				gsm_company_bailout_cost = yes
+				set_variable = { which = gsm_t_comp value = 0.3 }
+				gsm_company_nat_cost = yes
+				root = {
+					set_variable = { which = gsm_t_nat_needed value = prev.gsm_t_nat_cost }
+					change_variable = { which = gsm_t_nat_needed value = prev.gsm_t_bail_cost }
+				}
+			}
+			if = {
+				limit = {
+					resource_stockpile_compare = { resource = trade value >= 1 mult = gsm_t_nat_needed }
+					from = {
+						check_variable = { which = gsm_t_dcase value = 1 }
+						gsm_can_nationalise = yes
+					}
+				}
+				from = {
+					set_variable = { which = gsm_t_comp value = 0.3 }
+					gsm_company_nationalise = yes
+					if = {
+						limit = { check_variable = { which = gsm_t_nat_ok value = 1 } }
+						gsm_company_bailout = yes
+					}
+				}
+			}
+		}
+	}
+	option = {
+		name = gsm_company.50.e
+		ai_chance = { factor = 0 }
+		trigger = {
+			from = {
+				gsm_is_live_company = yes
+				has_country_flag = gsm_distress
+			}
+			is_variable_set = gsm_pcap
+			check_variable = { which = gsm_pcap value >= gsm_t_bail_needed }
+		}
+		custom_tooltip = gsm_company.50.e.tooltip
+		hidden_effect = {
+			from = {
+				gsm_distress_case_check = yes
+				if = {
+					limit = { check_variable = { which = gsm_t_dcase value = 1 } }
+					gsm_company_rescue = yes
+				}
+			}
+		}
+	}
+	option = {
+		name = gsm_company.50.f
+		ai_chance = { factor = 0 }
+		trigger = {
+			from = {
+				gsm_is_live_company = yes
+				has_country_flag = gsm_distress
+				is_variable_set = gsm_debt
+				check_variable = { which = gsm_debt value >= 1 }
+				is_variable_set = gsm_debt_iid
+				check_variable = { which = gsm_debt_iid value = root.gsm_iid }
+			}
+		}
+		custom_tooltip = gsm_company.50.f.tooltip
+		hidden_effect = {
+			from = {
+				gsm_distress_case_check = yes
+				if = {
+					limit = { check_variable = { which = gsm_t_dcase value = 1 } }
+					gsm_company_dfe = yes
+				}
+			}
+		}
+	}
+	option = {
+		name = gsm_company.50.d
+		default_hide_option = yes
+		ai_chance = { factor = 1 }
+		custom_tooltip = gsm_company.50.d.tooltip
+	}
+}

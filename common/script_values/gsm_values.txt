@@ -1,0 +1,66 @@
+gsm_corp_capacity = {
+	base = 0
+	add = trigger:pop_amount
+	divide = 1000
+	square_root = yes
+	add = 1
+	add = value:gsm_tech_capacity
+	modifier = {
+		add = 2
+		has_policy_flag = gsm_ir_laissez_faire
+	}
+	modifier = {
+		add = -1
+		has_policy_flag = gsm_ir_directed
+	}
+	floor = yes
+	min = 2
+	max = 25
+	modifier = {
+		add = 2
+		is_megacorp = yes
+	}
+}
+gsm_tech_capacity = {
+	base = 0
+	add = trigger:num_researched_techs
+	divide = 60
+	max = 5
+}
+gsm_mkt_price_100 = {
+	base = 0
+	complex_trigger_modifier = {
+		trigger = market_resource_price
+		parameters = {
+			resource = $RES$
+			amount = 100
+			trade_type = not_set
+		}
+		mode = add
+	}
+}
+gsm_branch_units = {
+	base = 0
+	modifier = {
+		add = gsm_bu_$IND$
+		is_variable_set = gsm_bu_$IND$
+	}
+}
+gsm_cp_sqrtu = {
+	base = 0
+	modifier = {
+		add = gsm_bu_construction
+		is_variable_set = gsm_bu_construction
+	}
+	square_root = yes
+}
+gsm_cp_qbonus = {
+	base = 0
+	modifier = {
+		add = gsm_bu_construction
+		is_variable_set = gsm_bu_construction
+	}
+	divide = 2
+	square_root = yes
+	floor = yes
+}

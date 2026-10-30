@@ -1,0 +1,397 @@
+gsm_branch_energy = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_energy
+	category = resource
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_technician_add = 100
+		mult = value:gsm_branch_units|IND|energy|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_technician_drone_add = 100
+		mult = value:gsm_branch_units|IND|energy|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_technician_drone_add = 100
+		mult = value:gsm_branch_units|IND|energy|
+	}
+}
+gsm_branch_minerals = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_minerals
+	category = resource
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_miner_add = 100
+		mult = value:gsm_branch_units|IND|minerals|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_mining_drone_add = 100
+		mult = value:gsm_branch_units|IND|minerals|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_mining_drone_add = 100
+		mult = value:gsm_branch_units|IND|minerals|
+	}
+}
+gsm_branch_food = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_food
+	category = resource
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_farmer_add = 100
+		mult = value:gsm_branch_units|IND|food|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_agri_drone_add = 100
+		mult = value:gsm_branch_units|IND|food|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_agri_drone_add = 100
+		mult = value:gsm_branch_units|IND|food|
+	}
+}
+gsm_branch_trade = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_trade
+	category = trade
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_trader_add = 100
+		mult = value:gsm_branch_units|IND|trade|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_logistics_drone_add = 100
+		mult = value:gsm_branch_units|IND|trade|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_logistics_drone_add = 100
+		mult = value:gsm_branch_units|IND|trade|
+	}
+}
+gsm_branch_consumer_goods = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_consumer_goods
+	category = manufacturing
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_artisan_add = 100
+		mult = value:gsm_branch_units|IND|consumer_goods|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no is_wilderness_empire = no } }
+		job_artisan_drone_add = 100
+		mult = value:gsm_branch_units|IND|consumer_goods|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes is_wilderness_empire = no } }
+		job_artisan_drone_add = 100
+		mult = value:gsm_branch_units|IND|consumer_goods|
+	}
+}
+gsm_branch_alloys = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_alloys
+	category = manufacturing
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_foundry_add = 100
+		mult = value:gsm_branch_units|IND|alloys|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_fabricator_add = 100
+		mult = value:gsm_branch_units|IND|alloys|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_fabricator_add = 100
+		mult = value:gsm_branch_units|IND|alloys|
+	}
+}
+gsm_branch_physics_research = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_physics_research
+	category = research
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_physicist_add = 100
+		mult = value:gsm_branch_units|IND|physics_research|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_calculator_physicist_add = 100
+		mult = value:gsm_branch_units|IND|physics_research|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_calculator_physicist_add = 100
+		mult = value:gsm_branch_units|IND|physics_research|
+	}
+}
+gsm_branch_society_research = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_society_research
+	category = research
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_biologist_add = 100
+		mult = value:gsm_branch_units|IND|society_research|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_calculator_biologist_add = 100
+		mult = value:gsm_branch_units|IND|society_research|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_calculator_biologist_add = 100
+		mult = value:gsm_branch_units|IND|society_research|
+	}
+}
+gsm_branch_engineering_research = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_engineering_research
+	category = research
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_engineer_add = 100
+		mult = value:gsm_branch_units|IND|engineering_research|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_calculator_engineer_add = 100
+		mult = value:gsm_branch_units|IND|engineering_research|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_calculator_engineer_add = 100
+		mult = value:gsm_branch_units|IND|engineering_research|
+	}
+}
+gsm_branch_unity = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_unity
+	category = unity
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_bureaucrat_add = 100
+		mult = value:gsm_branch_units|IND|unity|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_coordinator_add = 100
+		mult = value:gsm_branch_units|IND|unity|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_coordinator_add = 100
+		mult = value:gsm_branch_units|IND|unity|
+	}
+}
+gsm_branch_influence = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_influence
+	category = government
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_politician_add = 100
+		mult = value:gsm_branch_units|IND|influence|
+	}
+}
+gsm_branch_media = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_media
+	category = unity
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_entertainer_add = 100
+		mult = value:gsm_branch_units|IND|media|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_evaluator_add = 100
+		mult = value:gsm_branch_units|IND|media|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_evaluator_add = 100
+		mult = value:gsm_branch_units|IND|media|
+	}
+}
+gsm_branch_healthcare = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_healthcare
+	category = amenity
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no } }
+		job_healthcare_add = 100
+		mult = value:gsm_branch_units|IND|healthcare|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = yes is_machine_empire = no } }
+		job_spawning_drone_add = 100
+		mult = value:gsm_branch_units|IND|healthcare|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_machine_empire = yes } }
+		job_replicator_add = 100
+		mult = value:gsm_branch_units|IND|healthcare|
+	}
+}
+gsm_branch_construction = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_construction
+	category = amenity
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner }
+		planet_housing_add = 100
+		mult = value:gsm_branch_units|IND|construction|
+	}
+}
+gsm_branch_military = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_military
+	category = amenity
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no has_policy_flag = gsm_dout_on } NOT = { AND = { has_knights_zone = yes NOT = { has_modifier = slave_colony } } } }
+		job_soldier_add = 100
+		mult = value:gsm_branch_units|IND|military|
+	}
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no has_policy_flag = gsm_dout_on } has_knights_zone = yes NOT = { has_modifier = slave_colony } }
+		job_knight_add = 50
+		mult = value:gsm_branch_units|IND|military|
+	}
+}
+gsm_branch_security = {
+	base_buildtime = 1
+	owner_type = subject_holding
+	icon = gsm_branch_security
+	category = amenity
+	can_build = no
+	can_demolish = no
+	can_be_ruined = no
+	can_be_disabled = no
+	potential = { always = yes }
+	resources = { category = planet_holdings }
+	triggered_planet_modifier = {
+		potential = { exists = owner owner = { is_gestalt = no has_policy_flag = gsm_dout_on } }
+		job_enforcer_add = 100
+		mult = value:gsm_branch_units|IND|security|
+	}
+}

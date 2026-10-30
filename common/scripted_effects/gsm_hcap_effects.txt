@@ -1,0 +1,248 @@
+gsm_hcap_site = {
+	if = { limit = { NOT = { is_variable_set = gsm_t_hkh } } export_trigger_value_to_variable = { trigger = num_housing variable = gsm_t_hkh } }
+	set_variable = { which = gsm_t_hcv0 value = gsm_t_hkh }
+	if = {
+		limit = {
+			is_variable_set = gsm_bu_construction
+			check_variable = { which = gsm_t_hkh value >= 100 }
+		}
+		set_variable = { which = gsm_t_hcx value = gsm_t_hkh }
+		divide_variable = { which = gsm_t_hcx value = 100 }
+		set_variable = { which = gsm_t_hcy value = gsm_bu_construction }
+		divide_variable = { which = gsm_t_hcy value = gsm_t_hcx }
+		if = { limit = { check_variable = { which = gsm_t_hcy value > 1 } } set_variable = { which = gsm_t_hcy value = 1 } }
+		if = { limit = { check_variable = { which = gsm_t_hcy value < 0 } } set_variable = { which = gsm_t_hcy value = 0 } }
+		set_variable = { which = gsm_t_hcx value = 1 }
+		subtract_variable = { which = gsm_t_hcx value = gsm_t_hcy }
+		multiply_variable = { which = gsm_t_hcv0 value = gsm_t_hcx }
+	}
+	if = { limit = { check_variable = { which = gsm_t_hcv0 value < 0 } } set_variable = { which = gsm_t_hcv0 value = 0 } }
+	set_variable = { which = gsm_t_hcv value = gsm_t_hcv0 }
+	if = { limit = { is_variable_set = gsm_hcva check_variable = { which = gsm_hcva value > gsm_t_hcv } } set_variable = { which = gsm_t_hcv value = gsm_hcva } }
+	if = { limit = { is_variable_set = gsm_hcvb check_variable = { which = gsm_hcvb value > gsm_t_hcv } } set_variable = { which = gsm_t_hcv value = gsm_hcvb } }
+	set_variable = { which = gsm_t_hcc value = gsm_t_hcv }
+	multiply_variable = { which = gsm_t_hcc value = @gsm_hcap_vh }
+	export_trigger_value_to_variable = { trigger = planet_size variable = gsm_t_hcy }
+	multiply_variable = { which = gsm_t_hcy value = @gsm_hcap_size }
+	if = { limit = { check_variable = { which = gsm_t_hcy value > gsm_t_hcc } } set_variable = { which = gsm_t_hcc value = gsm_t_hcy } }
+	set_variable = { which = gsm_t_hcy value = gsm_t_hcc }
+	modulo_variable = { which = gsm_t_hcy value = 1 }
+	subtract_variable = { which = gsm_t_hcc value = gsm_t_hcy }
+	if = { limit = { check_variable = { which = gsm_t_hcc value < @gsm_hcap_min } } set_variable = { which = gsm_t_hcc value = @gsm_hcap_min } }
+	if = { limit = { is_variable_set = gsm_dbg_hcap } set_variable = { which = gsm_t_hcc value = gsm_dbg_hcap } }
+	set_variable = { which = gsm_t_hcu value = 0 }
+	if = { limit = { is_variable_set = gsm_bu_healthcare } set_variable = { which = gsm_t_hcu value = gsm_bu_healthcare } }
+	if = {
+		limit = {
+			is_variable_set = gsm_hcpm
+			check_variable = { which = gsm_hcpm value = event_target:gsm_exchange.gsm_month }
+			is_variable_set = gsm_hcpn
+		}
+		change_variable = { which = gsm_t_hcu value = gsm_hcpn }
+	}
+	set_variable = { which = gsm_t_hcr value = gsm_t_hcc }
+	subtract_variable = { which = gsm_t_hcr value = gsm_t_hcu }
+	set_variable = { which = gsm_t_hcx value = 0 }
+	if = {
+		limit = {
+			has_planet_flag = gsm_sbo_healthcare
+			gsm_gen_sub_healthcare = yes
+		}
+		set_variable = { which = gsm_t_hcx value = 1 }
+	}
+}
+gsm_hcap_month = {
+	set_variable = { which = gsm_t_hcy value = event_target:gsm_exchange.gsm_month }
+	set_variable = { which = gsm_t_hcx value = gsm_t_hcy }
+	modulo_variable = { which = gsm_t_hcx value = 12 }
+	subtract_variable = { which = gsm_t_hcy value = gsm_t_hcx }
+	divide_variable = { which = gsm_t_hcy value = 12 }
+	if = {
+		limit = {
+			NOT = {
+				AND = {
+					is_variable_set = gsm_hcvy
+					check_variable = { which = gsm_hcvy value = gsm_t_hcy }
+				}
+			}
+		}
+		set_variable = { which = gsm_t_hcx value = gsm_t_hcy }
+		change_variable = { which = gsm_t_hcx value = -1 }
+		set_variable = { which = gsm_hcvb value = 0 }
+		if = {
+			limit = {
+				is_variable_set = gsm_hcvy
+				is_variable_set = gsm_hcva
+				check_variable = { which = gsm_hcvy value = gsm_t_hcx }
+			}
+			set_variable = { which = gsm_hcvb value = gsm_hcva }
+		}
+		set_variable = { which = gsm_hcva value = 0 }
+		set_variable = { which = gsm_hcvy value = gsm_t_hcy }
+	}
+	gsm_hcap_site = yes
+	if = { limit = { check_variable = { which = gsm_t_hcv0 value > gsm_hcva } } set_variable = { which = gsm_hcva value = gsm_t_hcv0 } }
+	set_variable = { which = gsm_hcc value = gsm_t_hcc }
+	set_variable = { which = gsm_hcpw value = 0 }
+	set_variable = { which = gsm_hchq value = 0 }
+}
+gsm_hcap_count = {
+	set_variable = { which = gsm_hcn value = 0 }
+	if = { limit = { is_variable_set = gsm_bu_healthcare } set_variable = { which = gsm_hcn value = gsm_bu_healthcare } }
+	set_variable = { which = gsm_hca value = 0 }
+	if = {
+		limit = { is_variable_set = gsm_hcc }
+		set_variable = { which = gsm_hca value = gsm_hcn }
+		if = { limit = { is_variable_set = gsm_hchq } subtract_variable = { which = gsm_hca value = gsm_hchq } }
+		subtract_variable = { which = gsm_hca value = gsm_hcc }
+		if = { limit = { check_variable = { which = gsm_hca value < 0 } } set_variable = { which = gsm_hca value = 0 } }
+	}
+	set_variable = { which = gsm_hcx value = 0 }
+	if = {
+		limit = {
+			has_planet_flag = gsm_sbo_healthcare
+			gsm_gen_sub_healthcare = yes
+		}
+		set_variable = { which = gsm_hcx value = 1 }
+	}
+	if = {
+		limit = {
+			check_variable = { which = gsm_hcx value = 1 }
+			is_variable_set = gsm_ppool_healthcare
+			check_variable = { which = gsm_ppool_healthcare value >= @gsm_unitk_healthcare }
+		}
+		event_target:gsm_exchange = {
+			if = {
+				limit = {
+					NOT = {
+						AND = {
+							is_variable_set = gsm_hcpa_m
+							check_variable = { which = gsm_hcpa_m value = gsm_month }
+						}
+					}
+				}
+				set_variable = { which = gsm_hcpa_n value = 0 }
+				set_variable = { which = gsm_hcpa_m value = gsm_month }
+			}
+			change_variable = { which = gsm_hcpa_n value = 1 }
+		}
+	}
+}
+gsm_hcap_settle = {
+	set_variable = { which = gsm_t_ahcs value = 0 }
+	set_variable = { which = gsm_t_ahcl value = 0 }
+	if = {
+		limit = { check_variable = { which = gsm_t_ai value = @gsm_hcap_ind } }
+		if = {
+			limit = {
+				check_variable = { which = gsm_t_ahq value = 1 }
+				check_variable = { which = gsm_t_au value >= 1 }
+			}
+			gsm_default = { VAR = gsm_hchq VALUE = 0 }
+			change_variable = { which = gsm_hchq value = 1 }
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { which = gsm_t_ai value = @gsm_hcap_ind }
+			is_variable_set = gsm_hca
+			check_variable = { which = gsm_hca value >= 1 }
+			is_variable_set = gsm_t_ahca
+			check_variable = { which = gsm_t_ahca value > 0 }
+		}
+		if = {
+			limit = {
+				has_planet_flag = gsm_sbo_healthcare
+				gsm_gen_sub_healthcare = yes
+			}
+			if = {
+				limit = {
+					check_variable = { which = gsm_t_awar value = 0 }
+					exists = owner
+				}
+				set_variable = { which = gsm_t_hcpc value = gsm_t_ainp }
+				change_variable = { which = gsm_t_hcpc value = gsm_t_aopx }
+				change_variable = { which = gsm_t_hcpc value = gsm_t_adep }
+				multiply_variable = { which = gsm_t_hcpc value = gsm_t_ahca }
+				if = { limit = { check_variable = { which = gsm_t_hcpc value < 0 } } set_variable = { which = gsm_t_hcpc value = 0 } }
+				set_variable = { which = gsm_t_hcpd value = gsm_t_hcpc }
+				owner = {
+					export_resource_stockpile_to_variable = { resource = trade variable = gsm_t_tr }
+					prev = { set_variable = { which = gsm_t_hcx value = prev.gsm_t_tr } }
+				}
+				if = { limit = { check_variable = { which = gsm_t_hcpd value > gsm_t_hcx } } set_variable = { which = gsm_t_hcpd value = gsm_t_hcx } }
+				if = { limit = { check_variable = { which = gsm_t_hcpd value < 0 } } set_variable = { which = gsm_t_hcpd value = 0 } }
+				if = {
+					limit = { check_variable = { which = gsm_t_hcpd value > 0 } }
+					owner = {
+						set_variable = { which = gsm_t_pay value = prev.gsm_t_hcpd }
+						add_resource = { trade = -1 mult = gsm_t_pay }
+						gsm_default = { VAR = gsm_sub_m VALUE = 0 }
+						change_variable = { which = gsm_sub_m value = gsm_t_pay }
+					}
+				}
+				change_variable = { which = gsm_t_arev value = gsm_t_hcpd }
+				gsm_default = { VAR = gsm_hcpw VALUE = 0 }
+				change_variable = { which = gsm_hcpw value = gsm_t_hcpd }
+				set_variable = { which = gsm_hcz value = gsm_t_hcpd }
+				subtract_variable = { which = gsm_hcz value = gsm_t_hcpc }
+				set_variable = { which = gsm_t_apr value = gsm_t_arev }
+				subtract_variable = { which = gsm_t_apr value = gsm_t_ainp }
+				subtract_variable = { which = gsm_t_apr value = gsm_t_aopx }
+				subtract_variable = { which = gsm_t_apr value = gsm_t_adep }
+				round_variable_to_closest = { which = gsm_t_apr value = 0.1 }
+			}
+		}
+		else = {
+			set_variable = { which = gsm_t_ahcl value = gsm_t_afu }
+			multiply_variable = { which = gsm_t_ahcl value = gsm_t_vgu }
+			multiply_variable = { which = gsm_t_ahcl value = gsm_t_ahca }
+			if = { limit = { check_variable = { which = gsm_t_ahcl value < 0 } } set_variable = { which = gsm_t_ahcl value = 0 } }
+			set_variable = { which = gsm_t_hcx value = @gsm_hcap_sell_months }
+			if = {
+				limit = { is_variable_set = gsm_hcsm }
+				set_variable = { which = gsm_t_hcx value = event_target:gsm_exchange.gsm_month }
+				subtract_variable = { which = gsm_t_hcx value = gsm_hcsm }
+			}
+			if = {
+				limit = { check_variable = { which = gsm_t_hcx value >= @gsm_hcap_sell_months } }
+				set_variable = { which = gsm_hcsm value = event_target:gsm_exchange.gsm_month }
+				set_variable = { which = gsm_hcqr value = gsm_hca }
+				multiply_variable = { which = gsm_hcqr value = @gsm_hcap_sell_share }
+				set_variable = { which = gsm_t_hcy value = gsm_hcqr }
+				modulo_variable = { which = gsm_t_hcy value = 1 }
+				subtract_variable = { which = gsm_hcqr value = gsm_t_hcy }
+				if = { limit = { check_variable = { which = gsm_hcqr value < 1 } } set_variable = { which = gsm_hcqr value = 1 } }
+			}
+			if = {
+				limit = {
+					check_variable = { which = gsm_hcsm value = event_target:gsm_exchange.gsm_month }
+					is_variable_set = gsm_hcqr
+					check_variable = { which = gsm_hcqr value >= 1 }
+				}
+				set_variable = { which = gsm_t_ahcs value = gsm_hcqr }
+			}
+		}
+	}
+}
+gsm_hcap_debug_print = {
+	if = {
+		limit = { exists = capital_scope }
+		capital_scope = {
+			gsm_hcap_site = yes
+			save_event_target_as = gsm_t_hcdp
+		}
+		set_variable = { which = gsm_t_hcd1 value = event_target:gsm_t_hcdp.gsm_t_hcc }
+		set_variable = { which = gsm_t_hcd2 value = event_target:gsm_t_hcdp.gsm_t_hcu }
+		set_variable = { which = gsm_t_hcd3 value = event_target:gsm_t_hcdp.gsm_t_hcr }
+		set_variable = { which = gsm_t_hcd4 value = event_target:gsm_t_hcdp.gsm_t_hcx }
+		set_variable = { which = gsm_t_hcd5 value = event_target:gsm_t_hcdp.gsm_t_hcv0 }
+		set_variable = { which = gsm_t_hcd6 value = event_target:gsm_t_hcdp.gsm_t_hcv }
+		set_variable = { which = gsm_t_hcd7 value = 0 }
+		set_variable = { which = gsm_t_hcd8 value = 0 }
+		set_variable = { which = gsm_t_hcd9 value = -1 }
+		if = { limit = { event_target:gsm_t_hcdp = { is_variable_set = gsm_hca } } set_variable = { which = gsm_t_hcd7 value = event_target:gsm_t_hcdp.gsm_hca } }
+		if = { limit = { event_target:gsm_t_hcdp = { is_variable_set = gsm_hcpw } } set_variable = { which = gsm_t_hcd8 value = event_target:gsm_t_hcdp.gsm_hcpw } }
+		if = { limit = { event_target:gsm_t_hcdp = { is_variable_set = gsm_hcsm } } set_variable = { which = gsm_t_hcd9 value = event_target:gsm_t_hcdp.gsm_hcsm } }
+	}
+}

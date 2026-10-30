@@ -1,0 +1,580 @@
+namespace = gsm_grp
+country_event = {
+	id = gsm_grp.1
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = { which = gsm_t_gfdone value = 0 }
+		set_variable = { which = gsm_t_gfnl value = 0 }
+		gsm_group_form_quote = yes
+		set_variable = { which = gsm_t_gpk value = 0 }
+		every_country = {
+			limit = { has_country_flag = gsm_gpick }
+			gsm_group_member_check = yes
+			if = {
+				limit = { check_variable = { which = gsm_t_gmok value = 1 } }
+				event_target:gsm_t_gfe = { change_variable = { which = gsm_t_gpk value = 1 } }
+			}
+			else = { remove_country_flag = gsm_gpick }
+		}
+		if = {
+			limit = {
+				check_variable = { which = gsm_t_gfok value = 1 }
+				check_variable = { which = gsm_t_gpk value >= @gsm_grp_min_members }
+			}
+			event_target:gsm_exchange = { gsm_alloc_slot = yes }
+			create_country = {
+				name = "GSM_CO_UNNAMED"
+				type = gsm_group
+				effect = { save_event_target_as = gsm_t_newgrp }
+			}
+			ordered_country = {
+				limit = { has_country_flag = gsm_gpick }
+				order_by = gsm_k
+				position = 0
+				save_event_target_as = gsm_t_gfirst
+			}
+			event_target:gsm_t_newgrp = {
+				gsm_group_init = yes
+				gsm_group_apply_chosen_name = yes
+				save_event_target_as = gsm_t_grp
+			}
+			set_variable = { which = gsm_t_gval value = 0 }
+			every_country = {
+				limit = { has_country_flag = gsm_gpick }
+				gsm_group_swap_in = yes
+				event_target:gsm_t_gfe = { change_variable = { which = gsm_t_gval value = prev.gsm_t_swv } }
+				remove_country_flag = gsm_gpick
+			}
+			event_target:gsm_t_newgrp = {
+				set_variable = { which = gsm_t_iid value = event_target:gsm_t_gfe.gsm_iid }
+				set_variable = { which = gsm_t_dh value = gsm_shares }
+				set_variable = { which = gsm_t_dcb value = event_target:gsm_t_gfe.gsm_t_gval }
+				multiply_variable = { which = gsm_t_dcb value = @gsm_grp_value }
+				gsm_gen_hold_change = yes
+				save_event_target_as = gsm_t_gheld
+				gsm_group_nav = yes
+				set_variable = { which = gsm_fund value = gsm_t_gv }
+				gsm_div_safe = { VAR = gsm_fund BY = gsm_shares }
+				gsm_clamp_min = { VAR = gsm_fund MIN = @gsm_price_floor }
+				set_variable = { which = gsm_price value = gsm_fund }
+				set_variable = { which = gsm_target value = gsm_fund }
+				set_variable = { which = gsm_close value = gsm_fund }
+				set_variable = { which = gsm_price_prev value = gsm_fund }
+				gsm_company_mcap = yes
+				gsm_company_display = yes
+				gsm_group_consolidate = yes
+				gsm_group_display = yes
+				event_target:gsm_t_gfe = { set_country_flag = gsm_holds@event_target:gsm_t_gheld }
+				gsm_news_push = { TYPE = 23 NOTIFY_STAKE = yes }
+			}
+			set_variable = { which = gsm_t_gfdone value = 1 }
+			set_variable = { which = gsm_t_gfnl value = event_target:gsm_t_newgrp.gsm_t_gnl }
+			event_target:gsm_exchange = {
+				gsm_default = { VAR = gsm_n_g_formed VALUE = 0 }
+				change_variable = { which = gsm_n_g_formed value = 1 }
+			}
+			if = {
+				limit = { has_global_flag = gsm_debug_log }
+				log = "GALMARKET_GROUP: [This.GetName] formed [gsm_t_newgrp.GetRealName] from [This.gsm_t_gpk] companies, value [This.gsm_t_gval]"
+			}
+		}
+		every_country = {
+			limit = { has_country_flag = gsm_gpick }
+			remove_country_flag = gsm_gpick
+		}
+	}
+}
+country_event = {
+	id = gsm_grp.2
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = { which = gsm_t_gadone value = 0 }
+		save_event_target_as = gsm_t_gfe
+		if = {
+			limit = {
+				has_country_flag = gsm_has_group
+				exists = event_target:gsm_grpof@this
+				event_target:gsm_grpof@this = { gsm_is_live_group = yes }
+				exists = event_target:gsm_t_gadd
+			}
+			event_target:gsm_grpof@this = { save_event_target_as = gsm_t_grp }
+			event_target:gsm_t_grp = { gsm_company_controller = yes }
+			event_target:gsm_t_gadd = { gsm_group_member_check = yes }
+			if = {
+				limit = {
+					event_target:gsm_t_grp = { check_variable = { which = gsm_t_has_ctl value = 1 } }
+					event_target:gsm_t_ctl = { is_same_value = event_target:gsm_t_gfe }
+					event_target:gsm_t_gadd = { check_variable = { which = gsm_t_gmok value = 1 } }
+				}
+				event_target:gsm_t_grp = {
+					gsm_group_nav = yes
+					set_variable = { which = gsm_t_gps value = gsm_t_gv }
+					gsm_div_safe = { VAR = gsm_t_gps BY = gsm_shares }
+					gsm_clamp_min = { VAR = gsm_t_gps MIN = @gsm_price_floor }
+				}
+				event_target:gsm_t_gadd = { gsm_group_swap_in = yes }
+				event_target:gsm_t_grp = {
+					set_variable = { which = gsm_t_gnew value = event_target:gsm_t_gadd.gsm_t_swv }
+					multiply_variable = { which = gsm_t_gnew value = @gsm_grp_value }
+					divide_variable = { which = gsm_t_gnew value = gsm_t_gps }
+					gsm_floor = { VAR = gsm_t_gnew }
+					set_variable = { which = gsm_t_room value = @gsm_shares_cap }
+					subtract_variable = { which = gsm_t_room value = gsm_shares }
+					gsm_clamp = { VAR = gsm_t_gnew MIN = 0 MAX = gsm_t_room }
+					change_variable = { which = gsm_shares value = gsm_t_gnew }
+					set_variable = { which = gsm_t_iid value = event_target:gsm_t_gfe.gsm_iid }
+					set_variable = { which = gsm_t_dh value = gsm_t_gnew }
+					set_variable = { which = gsm_t_dcb value = event_target:gsm_t_gadd.gsm_t_swv }
+					multiply_variable = { which = gsm_t_dcb value = @gsm_grp_value }
+					gsm_gen_hold_change = yes
+					set_country_flag = gsm_new
+					gsm_company_mcap = yes
+					gsm_company_display = yes
+					gsm_group_consolidate = yes
+					gsm_group_display = yes
+				}
+				set_variable = { which = gsm_t_gadone value = 1 }
+			}
+		}
+	}
+}
+country_event = {
+	id = gsm_grp.3
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = { which = gsm_t_qend value = event_target:gsm_exchange.gsm_t_qend }
+		set_variable = { which = gsm_t_yend value = event_target:gsm_exchange.gsm_t_yend }
+		set_variable = { which = gsm_t_month value = event_target:gsm_exchange.gsm_month }
+		change_variable = { which = gsm_age value = 1 }
+		change_variable = { which = gsm_g_age value = 1 }
+		set_variable = { which = gsm_vol_last value = gsm_vol_m }
+		set_variable = { which = gsm_vol_m value = 0 }
+		set_variable = { which = gsm_vol_ai_m value = 0 }
+		gsm_group_home = yes
+		if = {
+			limit = { check_variable = { which = gsm_t_has_home value = 0 } check_variable = { which = gsm_g_n value >= 1 } }
+			save_event_target_as = gsm_t_grh
+			ordered_country = {
+				limit = { has_country_flag = gsm_in_grp exists = event_target:gsm_grp@this event_target:gsm_grp@this = { is_same_value = event_target:gsm_t_grh } }
+				order_by = gsm_k
+				position = 0
+				save_event_target_as = gsm_t_grhm
+			}
+			event_target:gsm_t_grhm = { gsm_company_peek_home = yes }
+			if = {
+				limit = { exists = event_target:gsm_t_grhm event_target:gsm_t_grhm = { check_variable = { which = gsm_t_has_home value = 1 } } }
+				event_target:gsm_t_home = { save_global_event_target_as = gsm_ghome@prev }
+			}
+			gsm_group_home = yes
+		}
+		if = {
+			limit = { check_variable = { which = gsm_g_n value < 1 } }
+			set_variable = { which = gsm_t_gdreason value = 1 }
+			country_event = { id = gsm_grp.5 }
+		}
+		else_if = {
+			limit = { NOT = { any_playable_country = { has_country_flag = gsm_holds@prev } } }
+			set_variable = { which = gsm_t_gdreason value = 3 }
+			country_event = { id = gsm_grp.5 }
+		}
+		else = {
+			if = {
+				limit = { check_variable = { which = gsm_t_qend value = 1 } }
+				gsm_group_dividends = yes
+				gsm_group_support = yes
+			}
+			gsm_group_value_price = yes
+			gsm_price_step = yes
+			gsm_company_flow_roll = yes
+			gsm_company_history = yes
+			gsm_company_mcap = yes
+			gsm_company_display = yes
+			gsm_group_display = yes
+			event_target:gsm_exchange = { change_variable = { which = gsm_n_groups value = 1 } }
+		}
+	}
+}
+country_event = {
+	id = gsm_grp.5
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = { which = gsm_t_gddone value = 0 }
+		if = {
+			limit = { gsm_is_live_group = yes }
+			gsm_group_home = yes
+			if = {
+				limit = { check_variable = { which = gsm_t_has_home value = 0 } check_variable = { which = gsm_cash value >= 1 } }
+				log = "GALMARKET_GROUP: [This.GetName] dissolved without a home, reason [This.gsm_t_gdreason]: the float's part of [This.gsm_cash] cash is lost"
+			}
+			gsm_news_push = { TYPE = 26 NOTIFY_STAKE = yes }
+			gsm_group_distribute = yes
+			set_variable = { which = gsm_t_ptot value = gsm_cash }
+			gsm_clamp_min = { VAR = gsm_t_ptot MIN = 0 }
+			gsm_company_payout_per_share = yes
+			set_variable = { which = gsm_cash value = 0 }
+			gsm_company_clear_holders = yes
+			every_country = {
+				limit = {
+					has_country_flag = gsm_has_group
+					exists = event_target:gsm_grpof@this
+					event_target:gsm_grpof@this = { is_same_value = event_target:gsm_t_gpd }
+				}
+				remove_country_flag = gsm_has_group
+			}
+			set_country_flag = gsm_defunct
+			remove_country_flag = gsm_listed
+			set_variable = { which = gsm_defunct_m value = 0 }
+			set_variable = { which = gsm_t_slot value = gsm_slot }
+			event_target:gsm_exchange = {
+				set_variable = { which = gsm_t_slot value = prev.gsm_t_slot }
+				gsm_gen_slot_mark_free = yes
+			}
+			set_variable = { which = gsm_float value = gsm_shares }
+			set_variable = { which = gsm_price_prev value = gsm_price }
+			set_variable = { which = gsm_price value = 0 }
+			gsm_company_mcap = yes
+			gsm_group_display = yes
+			set_variable = { which = gsm_t_gddone value = 1 }
+		}
+	}
+}
+country_event = {
+	id = gsm_grp.4
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = { which = gsm_t_gsdone value = 0 }
+		set_country_flag = gsm_t_gsfound
+		gsm_group_sub_quote = yes
+		remove_country_flag = gsm_t_gsfound
+		if = {
+			limit = {
+				check_variable = { which = gsm_t_gsok value = 0 }
+				check_variable = { which = gsm_t_gswhy value >= 5 }
+				check_variable = { which = gsm_t_gswhy value <= 7 }
+			}
+			event_target:gsm_t_home = { gsm_group_wizard_restore = yes }
+		}
+		if = {
+			limit = { check_variable = { which = gsm_t_gsok value = 1 } }
+			save_event_target_as = gsm_t_grp
+			event_target:gsm_t_home = {
+				save_event_target_as = gsm_t_founder
+				event_target:gsm_wz_hq@this = { save_event_target_as = gsm_t_hqp }
+				set_variable = { which = gsm_wz_form value = 1 }
+				set_variable = { which = gsm_wz_nm_ok value = 0 }
+				set_variable = { which = gsm_t_cap_total value = event_target:gsm_t_grp.gsm_t_gsk }
+			}
+			event_target:gsm_exchange = { gsm_alloc_slot = yes }
+			create_country = {
+				name = "GSM_CO_UNNAMED"
+				type = gsm_company
+				effect = { save_event_target_as = gsm_t_newco }
+			}
+			event_target:gsm_t_newco = {
+				gsm_company_init = yes
+				event_target:gsm_t_hqp = { save_global_event_target_as = gsm_hq@prev }
+				country_event = { id = gsm_fn.41 }
+				set_variable = { which = gsm_float value = 0 }
+				set_variable = { which = gsm_t_grph value = gsm_shares }
+				gsm_group_link = yes
+				gsm_company_sync_home = yes
+				gsm_company_initial_price = yes
+				gsm_company_display = yes
+				gsm_news_push = { TYPE = 24 NOTIFY_STAKE = yes }
+			}
+			subtract_variable = { which = gsm_cash value = gsm_t_gsk }
+			event_target:gsm_t_home = { gsm_group_wizard_restore = yes }
+			gsm_group_consolidate = yes
+			gsm_group_display = yes
+			set_variable = { which = gsm_t_gsdone value = 1 }
+			event_target:gsm_exchange = {
+				gsm_default = { VAR = gsm_n_g_subs VALUE = 0 }
+				change_variable = { which = gsm_n_g_subs value = 1 }
+			}
+		}
+	}
+}
+country_event = {
+	id = gsm_grp.9
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = { which = gsm_t_gidone value = 0 }
+		save_event_target_as = gsm_t_grp
+		set_variable = { which = gsm_t_x value = gsm_t_ginjk }
+		change_variable = { which = gsm_t_x value = @gsm_grp_reserve }
+		if = {
+			limit = {
+				check_variable = { which = gsm_t_ginjk value >= 1 }
+				check_variable = { which = gsm_cash value >= gsm_t_x }
+				exists = event_target:gsm_t_ginj
+				event_target:gsm_t_ginj = { has_country_flag = gsm_in_grp gsm_is_live_company = yes event_target:gsm_grp@this = { is_same_value = event_target:gsm_t_grp } }
+			}
+			event_target:gsm_t_ginj = {
+				gsm_company_new_share_price = { MULT = 1 }
+				set_variable = { which = gsm_t_new value = event_target:gsm_t_grp.gsm_t_ginjk }
+				divide_variable = { which = gsm_t_new value = gsm_t_ipx }
+				gsm_floor = { VAR = gsm_t_new }
+				set_variable = { which = gsm_t_room value = @gsm_shares_cap }
+				subtract_variable = { which = gsm_t_room value = gsm_shares }
+				gsm_clamp = { VAR = gsm_t_new MIN = 0 MAX = gsm_t_room }
+				set_variable = { which = gsm_t_proceeds value = gsm_t_new }
+				multiply_variable = { which = gsm_t_proceeds value = gsm_t_ipx }
+				change_variable = { which = gsm_cash value = gsm_t_proceeds }
+				change_variable = { which = gsm_shares value = gsm_t_new }
+				change_variable = { which = gsm_grp_h value = gsm_t_new }
+				set_country_flag = gsm_new
+				gsm_company_price_cap = yes
+				gsm_clamp_max = { VAR = gsm_price MAX = gsm_t_pcap }
+				gsm_company_mcap = yes
+				gsm_company_display = yes
+				if = {
+					limit = { check_variable = { which = gsm_t_new value >= 1 } }
+					set_timed_country_flag = { flag = gsm_recap_lock days = 720 }
+				}
+			}
+			subtract_variable = { which = gsm_cash value = event_target:gsm_t_ginj.gsm_t_proceeds }
+			gsm_group_display = yes
+			set_variable = { which = gsm_t_gidone value = 1 }
+		}
+	}
+}
+country_event = {
+	id = gsm_grp.7
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = { which = gsm_t_grescued value = 0 }
+		gsm_group_of = yes
+		if = {
+			limit = {
+				check_variable = { which = gsm_t_ing value = 1 }
+				event_target:gsm_t_grpx = { check_variable = { which = gsm_g_rescue value = 1 } }
+			}
+			gsm_company_bailout_cost = yes
+			set_variable = { which = gsm_t_x value = gsm_t_bail_cost }
+			change_variable = { which = gsm_t_x value = @gsm_grp_reserve }
+			if = {
+				limit = { event_target:gsm_t_grpx = { check_variable = { which = gsm_cash value >= prev.gsm_t_x } } }
+				gsm_company_new_share_price = { MULT = 1 }
+				set_variable = { which = gsm_t_new value = gsm_t_bail_cost }
+				divide_variable = { which = gsm_t_new value = gsm_t_ipx }
+				gsm_floor = { VAR = gsm_t_new }
+				set_variable = { which = gsm_t_room value = gsm_shares }
+				multiply_variable = { which = gsm_t_room value = 50 }
+				gsm_clamp_max = { VAR = gsm_t_new MAX = gsm_t_room }
+				set_variable = { which = gsm_t_room value = @gsm_shares_cap }
+				subtract_variable = { which = gsm_t_room value = gsm_shares }
+				gsm_clamp = { VAR = gsm_t_new MIN = 0 MAX = gsm_t_room }
+				event_target:gsm_t_grpx = { subtract_variable = { which = gsm_cash value = prev.gsm_t_bail_cost } }
+				change_variable = { which = gsm_cash value = gsm_t_bail_cost }
+				change_variable = { which = gsm_shares value = gsm_t_new }
+				change_variable = { which = gsm_grp_h value = gsm_t_new }
+				if = {
+					limit = { has_country_flag = gsm_distress }
+					set_variable = { which = gsm_t_rifa value = gsm_t_bail_cost }
+					gsm_company_rif_add = yes
+				}
+				gsm_company_rs_rescued = yes
+				set_timed_country_flag = { flag = gsm_recap_lock days = 720 }
+				set_country_flag = gsm_new
+				gsm_company_price_cap = yes
+				gsm_clamp_max = { VAR = gsm_price MAX = gsm_t_pcap }
+				gsm_clamp = { VAR = gsm_cash MIN = @gsm_cash_floor MAX = @gsm_cash_cap }
+				gsm_company_mcap = yes
+				gsm_company_display = yes
+				gsm_news_push = { TYPE = 25 NOTIFY_STAKE = yes }
+				save_event_target_as = gsm_t_gres
+				event_target:gsm_t_grpx = {
+					set_variable = { which = gsm_g_la_m value = event_target:gsm_exchange.gsm_month }
+					set_variable = { which = gsm_g_la_t value = 1 }
+					set_variable = { which = gsm_g_la_amt value = event_target:gsm_t_gres.gsm_t_bail_cost }
+					event_target:gsm_t_gres = { save_global_event_target_as = gsm_glast@prev }
+				}
+				set_variable = { which = gsm_t_grescued value = 1 }
+				event_target:gsm_exchange = {
+					gsm_default = { VAR = gsm_n_g_resc VALUE = 0 }
+					change_variable = { which = gsm_n_g_resc value = 1 }
+				}
+			}
+		}
+	}
+}
+country_event = {
+	id = gsm_grp.8
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_company_peek_home = yes
+		set_variable = { which = gsm_t_sallow value = 0 }
+		set_variable = { which = gsm_t_froom value = 0 }
+		if = {
+			limit = { event_target:gsm_t_grp = { exists = event_target:gsm_ghome@this } }
+			event_target:gsm_t_grp = { event_target:gsm_ghome@this = { save_event_target_as = gsm_t_trader } }
+			gsm_company_buy_rules = yes
+			set_variable = { which = gsm_t_sallow value = gsm_t_allowed }
+			set_variable = { which = gsm_t_froom value = gsm_t_room }
+		}
+		set_variable = { which = gsm_t_q value = gsm_shares }
+		multiply_variable = { which = gsm_t_q value = @gsm_grp_support_lot }
+		set_variable = { which = gsm_t_x value = gsm_shares }
+		multiply_variable = { which = gsm_t_x value = @gsm_bb_min_float }
+		set_variable = { which = gsm_t_room value = gsm_float }
+		subtract_variable = { which = gsm_t_room value = gsm_t_x }
+		gsm_clamp_max = { VAR = gsm_t_q MAX = gsm_t_room }
+		if = {
+			limit = { check_variable = { which = gsm_t_froom value >= 0 } }
+			gsm_clamp_max = { VAR = gsm_t_q MAX = gsm_t_froom }
+		}
+		if = {
+			limit = { check_variable = { which = gsm_t_sallow value = 0 } }
+			set_variable = { which = gsm_t_q value = 0 }
+		}
+		gsm_floor = { VAR = gsm_t_q }
+		set_variable = { which = gsm_t_imp value = gsm_t_q }
+		gsm_div_safe = { VAR = gsm_t_imp BY = gsm_shares }
+		multiply_variable = { which = gsm_t_imp value = @gsm_impact_k }
+		set_variable = { which = gsm_t_xp value = gsm_t_imp }
+		multiply_variable = { which = gsm_t_xp value = 0.5 }
+		change_variable = { which = gsm_t_xp value = 1 }
+		multiply_variable = { which = gsm_t_xp value = gsm_price }
+		set_variable = { which = gsm_t_cost value = gsm_t_q }
+		multiply_variable = { which = gsm_t_cost value = gsm_t_xp }
+		set_variable = { which = gsm_t_fee value = gsm_t_cost }
+		multiply_variable = { which = gsm_t_fee value = @gsm_trade_fee }
+		set_variable = { which = gsm_t_y value = event_target:gsm_t_grp.gsm_cash }
+		subtract_variable = { which = gsm_t_y value = @gsm_grp_reserve }
+		set_variable = { which = gsm_t_z value = gsm_t_cost }
+		change_variable = { which = gsm_t_z value = gsm_t_fee }
+		if = {
+			limit = {
+				check_variable = { which = gsm_t_q value >= 1 }
+				check_variable = { which = gsm_t_y value >= gsm_t_z }
+				check_variable = { which = gsm_t_has_home value = 1 }
+			}
+			event_target:gsm_t_grp = { subtract_variable = { which = gsm_cash value = prev.gsm_t_z } }
+			event_target:gsm_t_home = {
+				gsm_default = { VAR = gsm_pcap VALUE = 0 }
+				change_variable = { which = gsm_pcap value = prev.gsm_t_cost }
+			}
+			subtract_variable = { which = gsm_float value = gsm_t_q }
+			change_variable = { which = gsm_grp_h value = gsm_t_q }
+			set_variable = { which = gsm_t_x value = gsm_price }
+			multiply_variable = { which = gsm_t_x value = gsm_t_imp }
+			change_variable = { which = gsm_price value = gsm_t_x }
+			gsm_company_price_cap = yes
+			gsm_clamp_max = { VAR = gsm_price MAX = gsm_t_pcap }
+			gsm_default = { VAR = gsm_vol_m VALUE = 0 }
+			change_variable = { which = gsm_vol_m value = gsm_t_q }
+			gsm_default = { VAR = gsm_nb_m VALUE = 0 }
+			change_variable = { which = gsm_nb_m value = gsm_t_q }
+			gsm_company_mcap = yes
+			gsm_company_display = yes
+			event_target:gsm_t_grp = {
+				set_variable = { which = gsm_g_la_m value = event_target:gsm_exchange.gsm_month }
+				set_variable = { which = gsm_g_la_t value = 2 }
+				set_variable = { which = gsm_g_la_amt value = prev.gsm_t_z }
+			}
+			event_target:gsm_exchange = {
+				gsm_default = { VAR = gsm_n_g_supp VALUE = 0 }
+				change_variable = { which = gsm_n_g_supp value = 1 }
+			}
+		}
+	}
+}
+country_event = {
+	id = gsm_grp.6
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		save_event_target_as = gsm_t_gfe
+		set_variable = { which = gsm_t_aictl value = 0 }
+		if = {
+			limit = { is_gestalt = no gsm_has_iid = yes NOT = { has_country_flag = gsm_has_group } }
+			gsm_group_form_quote = yes
+			if = {
+				limit = { check_variable = { which = gsm_t_gfok value = 1 } check_variable = { which = gsm_t_gfn value >= @gsm_grp_ai_min } }
+				set_variable = { which = gsm_t_gpk value = 0 }
+				every_country = {
+					limit = { gsm_is_live_company = yes check_variable = { which = gsm_home_iid value = event_target:gsm_t_gfe.gsm_iid } }
+					gsm_group_member_check = yes
+					if = {
+						limit = { check_variable = { which = gsm_t_gmok value = 1 } }
+						set_country_flag = gsm_gpick
+						event_target:gsm_t_gfe = { change_variable = { which = gsm_t_gpk value = 1 } }
+					}
+				}
+				country_event = { id = gsm_grp.1 }
+			}
+		}
+		else_if = {
+			limit = { has_country_flag = gsm_has_group exists = event_target:gsm_grpof@this event_target:gsm_grpof@this = { gsm_is_live_group = yes } }
+			event_target:gsm_grpof@this = {
+				save_event_target_as = gsm_t_aig
+				gsm_company_controller = yes
+			}
+			if = {
+				limit = {
+					event_target:gsm_t_aig = { check_variable = { which = gsm_t_has_ctl value = 1 } }
+					event_target:gsm_t_ctl = { is_same_value = event_target:gsm_t_gfe }
+				}
+				set_variable = { which = gsm_t_aictl value = 1 }
+			}
+		}
+		if = {
+			limit = { check_variable = { which = gsm_t_aictl value = 1 } }
+			event_target:gsm_t_aig = {
+				set_variable = { which = gsm_g_rescue value = 1 }
+				set_variable = { which = gsm_g_support value = 1 }
+			}
+			every_country = {
+				limit = { gsm_is_live_company = yes check_variable = { which = gsm_home_iid value = event_target:gsm_t_gfe.gsm_iid } }
+				gsm_group_member_check = yes
+				if = {
+					limit = { check_variable = { which = gsm_t_gmok value = 1 } }
+					save_event_target_as = gsm_t_gadd
+					event_target:gsm_t_gfe = { country_event = { id = gsm_grp.2 } }
+				}
+			}
+			if = {
+				limit = {
+					event_target:gsm_t_aig = {
+						check_variable = { which = gsm_cash value >= 3000 }
+					}
+				}
+				gsm_gen_ai_types_alive = yes
+				gsm_gen_ai_need_scan = yes
+				gsm_gen_ai_pick_industry = yes
+				if = {
+					limit = { check_variable = { which = gsm_wz_ind value > 0 } }
+					event_target:gsm_t_aig = {
+						set_variable = { which = gsm_t_gsind value = event_target:gsm_t_gfe.gsm_wz_ind }
+						set_variable = { which = gsm_t_gsk value = 2000 }
+						if = { limit = { check_variable = { which = gsm_cash value >= 6000 } } set_variable = { which = gsm_t_gsk value = 5000 } }
+						if = { limit = { check_variable = { which = gsm_cash value >= 11000 } } set_variable = { which = gsm_t_gsk value = 10000 } }
+						set_variable = { which = gsm_t_gsai value = 1 }
+						country_event = { id = gsm_grp.4 }
+						set_variable = { which = gsm_t_gsai value = 0 }
+					}
+				}
+			}
+			event_target:gsm_t_aig = {
+				if = {
+					limit = {
+						root = { NOT = { gsm_is_or_was_human = yes } }
+						NOT = { has_country_flag = gsm_listed }
+						check_variable = { which = gsm_g_age value >= @gsm_grp_ai_ipo_months }
+						check_variable = { which = gsm_g_c_k value >= @gsm_grp_ai_ipo_k }
+					}
+					set_variable = { which = gsm_t_ipo_pct value = @gsm_grp_ai_ipo_pct }
+					gsm_company_ipo = yes
+				}
+			}
+		}
+	}
+}

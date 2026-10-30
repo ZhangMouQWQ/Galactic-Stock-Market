@@ -1,0 +1,86 @@
+gsm_launcher_open = {
+	potential = {
+		exists = from
+		from = { NOT = { has_country_flag = gsm_launcher_hidden } }
+	}
+	allow = {
+		exists = from
+		from = { gsm_is_market_country = yes }
+	}
+	effect = {
+		from = {
+			custom_tooltip = GSM_LAUNCHER_TT
+			hidden_effect = {
+				country_event = { id = gsm_ui.900 }
+			}
+		}
+	}
+}
+gsm_terminal_shortcut_open = {
+ potential = { exists = from }
+ allow = { exists = from from = { gsm_is_market_country = yes } }
+ effect = {
+  from = {
+   custom_tooltip = GSM_LAUNCHER_TT
+   hidden_effect = { country_event = { id = gsm_ui.900 } }
+  }
+ }
+}
+gsm_launcher_badge = {
+	potential = {
+		exists = from
+		from = {
+			has_country_flag = gsm_news_unread
+			NOT = { has_country_flag = gsm_launcher_hidden }
+		}
+	}
+	allow = { always = yes }
+	effect = {
+		custom_tooltip = GSM_LAUNCHER_BADGE_TT
+	}
+}
+gsm_launcher_hide = {
+	potential = {
+		exists = from
+		from = { NOT = { has_country_flag = gsm_launcher_hidden } }
+	}
+	allow = { always = yes }
+	effect = {
+		from = {
+			custom_tooltip = GSM_LAUNCHER_HIDE_TT
+			hidden_effect = { set_country_flag = gsm_launcher_hidden }
+		}
+	}
+}
+gsm_launcher_show = {
+	potential = {
+		exists = from
+		from = { has_country_flag = gsm_launcher_hidden }
+	}
+	allow = { always = yes }
+	effect = {
+		from = {
+			custom_tooltip = GSM_LAUNCHER_SHOW_TT
+			hidden_effect = { remove_country_flag = gsm_launcher_hidden }
+		}
+	}
+}
+gsm_open_planet_companies = {
+	potential = {
+		is_colony = yes
+	}
+	allow = {
+		is_colony = yes
+		exists = from
+	}
+	effect = {
+		from = {
+			custom_tooltip = GSM_HOLD_OPEN_COMPANIES_TT
+			hidden_effect = {
+				prev = { save_global_event_target_as = gsm_ui_planet@prev }
+				set_variable = { which = gsm_ui_page value = 0 }
+				country_event = { id = gsm_ui.30 }
+			}
+		}
+	}
+}

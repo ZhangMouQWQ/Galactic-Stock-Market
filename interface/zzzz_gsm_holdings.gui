@@ -1,0 +1,318 @@
+guiTypes = {
+	containerWindowType = {
+		name = "holding_type_entry"
+		size = { width = 412 height = 370 }
+		position = { x = 0 y = 0 }
+		background = {
+			name = "background"
+			quadTextureSprite = "GFX_gsm_hold_column"
+		}
+		containerWindowType = {
+			name = "title_general"
+			size = { width = 412 height = 34 }
+			position = { x = 0 y = 0 }
+			iconType = {
+				name = "title_line"
+				quadTextureSprite = "GFX_line_short"
+				position = { x = -3000 y = -3000 }
+			}
+			instantTextBoxType = {
+				name = "holding_type_title"
+				font = "malgun_goth_24"
+				position = { x = 10 y = 4 }
+				text = "Corporate"
+				maxWidth = 284
+				maxHeight = 24
+				fixedSize = yes
+				format = left
+				orientation = upper_left
+				text_color_code = "E"
+			}
+			buttonType = {
+				name = "gsm_hold_title_line"
+				quadTextureSprite = "GFX_gsm_accentbar"
+				position = { x = 0 y = 31 }
+				size = { x = 412 y = 2 }
+				alwaysTransparent = yes
+			}
+			effectButtonType = {
+				name = "gsm_hold_open_companies"
+				spriteType = "GFX_gsm_hold_btn"
+				position = { x = 302 y = 4 }
+				size = { x = 104 y = 24 }
+				buttonText = "GSM_HOLD_OPEN_COMPANIES"
+				buttonFont = "cg_16b"
+				format = center
+				effect = "gsm_open_planet_companies"
+				clicksound = "interface"
+				oversound = "mouse_over"
+			}
+		}
+		containerWindowType = {
+			name = "holdings_per_country_container"
+			size = { width = 412 height = 336 }
+			position = { x = 0 y = 34 }
+			gridBoxType = {
+				name = "holdings_per_country_box"
+				position = { x = 0 y = 0 }
+				format = "UPPER_LEFT"
+				slotsize = { width = 412 height = 168 }
+				add_horizontal = no
+				max_slots_horizontal = 1
+			}
+		}
+		containerWindowType = {
+			name = "empty_text_container"
+			size = { width = 412 height = 336 }
+			position = { x = 0 y = 34 }
+			instantTextBoxType = {
+				name = "empty_text"
+				font = "cg_16b"
+				text = "Some text" 
+				position = { x = 0 y = 150 }
+				maxWidth = 412
+				maxHeight = 20
+				fixedSize = yes
+				format = center
+			}
+		}
+	}
+	containerWindowType = {
+		name = "holding_per_country_entry"
+		size = { width = 412 height = 164 }
+		position = { x = 0 y = 0 }
+		containerWindowType = {
+			name = "contents"
+			size = { width = 412 height = 164 }
+			position = { x = 0 y = 0 }
+			background = {
+				name = "background"
+				quadTextureSprite = "GFX_gsm_hold_row"
+			}
+			containerWindowType = {
+				name = "buildings_and_value"
+				size = { width = 412 height = 132 }
+				position = { x = 0 y = 0 }
+				iconType = {
+					name = "gsm_hold_flag_frame"
+					spriteType = "GFX_gsm_hold_flag"
+					position = { x = 7 y = 8 }
+					alwaysTransparent = yes
+				}
+				buttonType = {
+					name = "country_flag"
+					quadTextureSprite = "GFX_empire_flag_48"
+					position = { x = 9 y = 10 }
+				}
+				containerWindowType = {
+					name = "buildings_container"
+					size = { width = 338 height = 128 }
+					position = { x = 66 y = 6 }
+					gridBoxType = {
+						name = "buildings_box"
+						position = { x = 0 y = 0 }
+						size = { width = 338 height = 128 }
+						format = "UPPER_LEFT"
+						slotsize = { width = 42 height = 42 }
+						add_horizontal = yes
+						max_slots_horizontal = 8
+						max_slots_vertical = 3
+					}
+				}
+				containerWindowType = {
+					name = "holdings_value_container"
+					size = { width = 52 height = 24 }
+					position = { x = 7 y = 66 }
+					background = {
+						name = "background"
+						quadTextureSprite = "GFX_gsm_hold_value"
+					}
+					iconType = {
+						name = "holdings_value_icon"
+						spriteType = "GFX_pink_box"
+						position = { x = -3000 y = -3000 }
+					}
+					instantTextBoxType = {
+						name = "holdings_value_amount"
+						font = "cg_16b"
+						position = { x = 0 y = 3 }
+						text = "5"
+						maxWidth = 52
+						maxHeight = 18
+						fixedSize = yes
+						format = center
+						orientation = upper_left
+					}
+				}
+			}
+			containerWindowType = {
+				name = "holdings_resources"
+				size = { width = 412 height = 28 }
+				position = { x = 0 y = 134 }
+				containerWindowType = {
+					name = "holdings_output"
+					size = { width = 130 height = 26 }
+					position = { x = 7 y = 0 }
+					background = {
+						name = "background"
+						quadTextureSprite = "GFX_gsm_hold_strip"
+					}
+					iconType = {
+						name = "gsm_hold_output_icon"
+						spriteType = "GFX_growth_positive"
+						position = { x = 7 y = 6 }
+						alwaysTransparent = yes
+					}
+					instantTextBoxType = {
+						name = "holdings_production_output_title"
+						font = "cg_16b"
+						text = "PRODUCTION"
+						position = { x = -3000 y = -3000 }
+						maxWidth = 10
+						maxHeight = 10
+						fixedSize = yes
+						alwaysTransparent = yes
+					}
+					instantTextBoxType = {
+						name = "holdings_production_output_amount"
+						font = "cg_16b"
+						position = { x = 26 y = 4 }
+						text = "10"
+						maxWidth = 100
+						maxHeight = 18
+						fixedSize = yes
+						format = left
+					}
+				}
+				containerWindowType = {
+					name = "holdings_input"
+					size = { width = 130 height = 26 }
+					position = { x = 141 y = 0 }
+					background = {
+						name = "background"
+						quadTextureSprite = "GFX_gsm_hold_strip"
+					}
+					iconType = {
+						name = "gsm_hold_input_icon"
+						spriteType = "GFX_growth_negative"
+						position = { x = 7 y = 6 }
+						alwaysTransparent = yes
+					}
+					instantTextBoxType = {
+						name = "holdings_consumption_output_title"
+						font = "cg_16b"
+						text = "DEFICIT"
+						position = { x = -3000 y = -3000 }
+						maxWidth = 10
+						maxHeight = 10
+						fixedSize = yes
+						alwaysTransparent = yes
+					}
+					instantTextBoxType = {
+						name = "holdings_consumption_output_amount"
+						font = "cg_16b"
+						position = { x = 26 y = 4 }
+						text = "10"
+						maxWidth = 100
+						maxHeight = 18
+						fixedSize = yes
+						format = left
+					}
+				}
+			}
+			buttonType = {
+				name = "holdings_action_button"
+				quadTextureSprite = "GFX_gsm_btn_ghost"
+				position = { x = 275 y = 134 }
+				size = { x = 131 y = 26 }
+				text = "CLOSE_BRANCH_OFFICE"
+				font = "cg_16b"
+			}
+		}
+		buttonType = {
+			name = "establish_branch_office"
+			position = { x = -70 y = -13 }
+			quadTextureSprite = "GFX_gsm_btn_ghost"
+			size = { x = 140 y = 26 }
+			buttonFont = "cg_16b"
+			text = "ESTABLISH_BRANCH_OFFICE"
+			font = "cg_16b"
+			orientation = CENTER
+			oversound = mouse_over
+			navLeft = "change"
+			shortcut = "B"
+		}
+	}
+	containerWindowType = {
+		name = "planet_holding_building_entry"
+		position = { x = 0 y = 0 }
+		size = { width = 40 height = 40 }
+		buttonType = {
+			name = "locked_building_button"
+			position = { x = 0 y = 1 }
+			spriteType = "GFX_building_module_locked_slot"
+			scale = 0.69
+			clicksound = "menu_slide_open"
+		}
+		iconType = {
+			name = "building_bg"
+			position = { x = 0 y = 0 }
+			spriteType = "GFX_gsm_hold_slot_bg"
+			alwaysTransparent = yes
+		}
+		iconType = {
+			name = "add_building_bg"
+			spriteType = "GFX_spaceport_module_slot"
+			position = { x = 0 y = 0 }
+			scale = 0.69
+		}
+		iconType = {
+			name = "building_icon"
+			position = { x = 2 y = 2 }
+			scale = 0.46
+			spriteType = "GFX_building_unknown"
+			alwaysTransparent = yes
+		}
+		iconType = {
+			name = "ruined_building_icon"
+			position = { x = 2 y = 2 }
+			scale = 0.46
+			spriteType = "GFX_building_ruined"
+			alwaysTransparent = yes
+		}
+		iconType = {
+			name = "progressbar"
+			spriteType = "GFX_building_progressbar"
+			position = { x = 2 y = 33 }
+			scale = 0.69
+			alwaysTransparent = yes
+		}
+		buttonType = {
+			name = "open_building_button"
+			position = { x = 0 y = 0 }
+			size = { x = 40 y = 40 }
+			quadTextureSprite = "GFX_gsm_hold_slot"
+			clicksound = "menu_slide_open"
+		}
+		iconType = {
+			name = "selected_building_icon"
+			spriteType = "GFX_selected_building"
+			position = { x = 1 y = 1 }
+			scale = 0.38
+			alwaysTransparent = no
+		}
+		buttonType = {
+			name = "upgrade_building"
+			quadTextureSprite = "GFX_district_upgrade_overlay"
+			position = { x = 1 y = 1 }
+			clicksound = "queuing_building"
+			scale = 0.55
+		}
+		iconType = {
+			name = "disabled_building"
+			spriteType = "GFX_disabled_building"
+			position = { x = 21 y = 21 }
+			scale = 0.55
+		}
+	}
+}

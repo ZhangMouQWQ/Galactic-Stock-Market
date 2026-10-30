@@ -1,0 +1,419 @@
+gsm_policy_corporate_tax = {
+	category = economy
+	potential = {
+		is_country_type = default
+	}
+	option = {
+		name = "gsm_tax_standard"
+		policy_flags = { gsm_tax_standard }
+		ai_weight = { weight = 100 }
+	}
+	option = {
+		name = "gsm_tax_low"
+		policy_flags = { gsm_tax_low }
+		ai_weight = {
+			weight = 40
+			modifier = { factor = 0 NOT = { has_global_flag = game_started } }
+			modifier = { factor = 2 has_ethic = ethic_egalitarian }
+			modifier = { factor = 2 has_ethic = ethic_fanatic_egalitarian }
+			modifier = { factor = 2 is_megacorp = yes }
+		}
+	}
+	option = {
+		name = "gsm_tax_high"
+		policy_flags = { gsm_tax_high }
+		ai_weight = {
+			weight = 40
+			modifier = { factor = 2 has_ethic = ethic_authoritarian }
+			modifier = { factor = 2 has_ethic = ethic_fanatic_authoritarian }
+			modifier = { factor = 0.5 is_megacorp = yes }
+		}
+	}
+}
+gsm_policy_foreign_capital = {
+	category = economy
+	potential = {
+		is_country_type = default
+	}
+	option = {
+		name = "gsm_fc_restricted"
+		policy_flags = { gsm_fc_restricted }
+		ai_weight = { weight = 100 }
+	}
+	option = {
+		name = "gsm_fc_open"
+		policy_flags = { gsm_fc_open }
+		ai_weight = {
+			weight = 60
+			modifier = { factor = 0 NOT = { has_global_flag = game_started } }
+			modifier = { factor = 2 has_ethic = ethic_xenophile }
+			modifier = { factor = 3 has_ethic = ethic_fanatic_xenophile }
+			modifier = { factor = 2 is_megacorp = yes }
+			modifier = { factor = 0 has_ethic = ethic_xenophobe }
+			modifier = { factor = 0 has_ethic = ethic_fanatic_xenophobe }
+		}
+	}
+	option = {
+		name = "gsm_fc_closed"
+		policy_flags = { gsm_fc_closed }
+		ai_weight = {
+			weight = 20
+			modifier = { factor = 0 NOT = { has_global_flag = game_started } }
+			modifier = { factor = 3 has_ethic = ethic_xenophobe }
+			modifier = { factor = 5 has_ethic = ethic_fanatic_xenophobe }
+			modifier = { factor = 0 has_ethic = ethic_xenophile }
+			modifier = { factor = 0 has_ethic = ethic_fanatic_xenophile }
+		}
+	}
+}
+gsm_policy_investment_regime = {
+	category = economy
+	potential = {
+		is_country_type = default
+	}
+	option = {
+		name = "gsm_ir_guided"
+		policy_flags = { gsm_ir_guided }
+		ai_weight = { weight = 100 }
+	}
+	option = {
+		name = "gsm_ir_laissez_faire"
+		policy_flags = { gsm_ir_laissez_faire }
+		ai_weight = {
+			weight = 50
+			modifier = { factor = 0 NOT = { has_global_flag = game_started } }
+			modifier = { factor = 2 has_ethic = ethic_egalitarian }
+			modifier = { factor = 3 is_megacorp = yes }
+		}
+	}
+	option = {
+		name = "gsm_ir_directed"
+		policy_flags = { gsm_ir_directed }
+		ai_weight = {
+			weight = 50
+			modifier = { factor = 0 NOT = { has_global_flag = game_started } }
+			modifier = { factor = 2 has_ethic = ethic_authoritarian }
+			modifier = { factor = 3 has_ethic = ethic_fanatic_authoritarian }
+		}
+	}
+}
+gsm_policy_bailout = {
+	category = economy
+	potential = {
+		is_country_type = default
+	}
+	option = {
+		name = "gsm_bo_case_by_case"
+		policy_flags = { gsm_bo_case_by_case }
+		ai_weight = { weight = 100 }
+	}
+	option = {
+		name = "gsm_bo_never"
+		policy_flags = { gsm_bo_never }
+		ai_weight = {
+			weight = 30
+			modifier = { factor = 2 has_ethic = ethic_egalitarian }
+		}
+	}
+	option = {
+		name = "gsm_bo_always"
+		policy_flags = { gsm_bo_always }
+		ai_weight = {
+			weight = 30
+			modifier = { factor = 2 has_ethic = ethic_authoritarian }
+		}
+	}
+}
+gsm_policy_subsidies = {
+	category = economy
+	potential = {
+		is_country_type = default
+	}
+	option = {
+		name = "gsm_sub_none"
+		policy_flags = { gsm_sub_none }
+		ai_weight = { weight = 100 }
+	}
+	option = {
+		name = "gsm_sub_public"
+		policy_flags = { gsm_sub_public }
+		ai_weight = {
+			weight = 10
+			modifier = { factor = 0 NOT = { has_global_flag = game_started } }
+			modifier = { factor = 15 has_ethic = ethic_egalitarian }
+			modifier = { factor = 15 has_ethic = ethic_fanatic_egalitarian }
+			modifier = { factor = 15 has_ethic = ethic_pacifist }
+			modifier = { factor = 15 has_ethic = ethic_fanatic_pacifist }
+		}
+	}
+	option = {
+		name = "gsm_sub_all"
+		policy_flags = { gsm_sub_all }
+		ai_weight = {
+			weight = 10
+			modifier = { factor = 0 NOT = { has_global_flag = game_started } }
+			modifier = { factor = 15 has_ethic = ethic_authoritarian }
+			modifier = { factor = 15 has_ethic = ethic_fanatic_authoritarian }
+			modifier = { factor = 15 is_gestalt = yes }
+		}
+	}
+}
+gsm_policy_fdi = {
+	category = economy
+	potential = {
+		is_country_type = default
+		is_gestalt = no
+	}
+	option = {
+		name = "gsm_fdi_pact"
+		policy_flags = { gsm_fdi_pact }
+		ai_weight = {
+			weight = 100
+			modifier = {
+				factor = 0
+				OR = {
+					has_ethic = ethic_xenophile
+					has_ethic = ethic_fanatic_xenophile
+					has_ethic = ethic_xenophobe
+					has_ethic = ethic_fanatic_xenophobe
+				}
+			}
+		}
+	}
+	option = {
+		name = "gsm_fdi_open"
+		policy_flags = { gsm_fdi_open }
+		ai_weight = {
+			weight = 100
+			modifier = {
+				factor = 0
+				NOR = {
+					has_ethic = ethic_xenophile
+					has_ethic = ethic_fanatic_xenophile
+				}
+			}
+		}
+	}
+	option = {
+		name = "gsm_fdi_forbidden"
+		policy_flags = { gsm_fdi_forbidden }
+		ai_weight = {
+			weight = 100
+			modifier = {
+				factor = 0
+				NOR = {
+					has_ethic = ethic_xenophobe
+					has_ethic = ethic_fanatic_xenophobe
+				}
+			}
+		}
+	}
+}
+gsm_policy_securities_tax = {
+	category = economy
+	potential = {
+		is_country_type = default
+	}
+	option = {
+		name = "gsm_stx_none"
+		policy_flags = { gsm_stx_none }
+		ai_weight = {
+			weight = 100
+		}
+	}
+	option = {
+		name = "gsm_stx_std"
+		policy_flags = { gsm_stx_std }
+		ai_weight = {
+			weight = 150
+			modifier = {
+				factor = 0
+				NOT = { has_global_flag = game_started }
+			}
+			modifier = {
+				factor = 0
+				is_ai = no
+			}
+			modifier = {
+				factor = 0
+				NOR = {
+					has_ethic = ethic_xenophobe
+					has_ethic = ethic_fanatic_xenophobe
+				}
+			}
+		}
+	}
+	option = {
+		name = "gsm_stx_high"
+		policy_flags = { gsm_stx_high }
+		ai_weight = {
+			weight = 0
+		}
+	}
+}
+gsm_policy_defense_outsourcing = {
+	category = military
+	potential = {
+		is_country_type = default
+		is_gestalt = no
+	}
+	option = {
+		name = "gsm_dout_off"
+		policy_flags = { gsm_dout_off }
+		ai_weight = {
+			weight = 100
+		}
+	}
+	option = {
+		name = "gsm_dout_on"
+		policy_flags = { gsm_dout_on }
+		modifier = {
+			starbase_shipyard_build_time_mult = 0.5
+			ships_upkeep_mult = -0.2
+			command_limit_mult = -0.5
+			country_naval_cap_mult = -0.5
+			ship_experience_gain_mult = -0.5
+			army_experience_gain_mult = -0.5
+		}
+		on_disabled = {
+			hidden_effect = {
+				country_event = { id = gsm_do.1 }
+			}
+		}
+		ai_weight = {
+			weight = 10
+			modifier = {
+				factor = 0
+				NOT = { has_global_flag = game_started }
+			}
+			modifier = {
+				factor = 0
+				is_ai = no
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_ethic = ethic_militarist
+					has_ethic = ethic_fanatic_militarist
+				}
+			}
+			modifier = {
+				factor = 12
+				has_ethic = ethic_pacifist
+			}
+			modifier = {
+				factor = 20
+				has_ethic = ethic_fanatic_pacifist
+			}
+		}
+	}
+}
+gsm_policy_outward_fdi = {
+	category = economy
+	potential = {
+		is_country_type = default
+	}
+	option = {
+		name = "gsm_ofdi_regime"
+		policy_flags = { gsm_ofdi_regime }
+		ai_weight = {
+			weight = 100
+		}
+	}
+	option = {
+		name = "gsm_ofdi_limited"
+		policy_flags = { gsm_ofdi_limited }
+		ai_weight = {
+			weight = 0
+		}
+	}
+	option = {
+		name = "gsm_ofdi_forbidden"
+		policy_flags = { gsm_ofdi_forbidden }
+		ai_weight = {
+			weight = 150
+			modifier = {
+				factor = 0
+				NOT = { has_global_flag = game_started }
+			}
+			modifier = {
+				factor = 0
+				is_ai = no
+			}
+			modifier = {
+				factor = 0
+				NOR = {
+					has_ethic = ethic_xenophobe
+					has_ethic = ethic_fanatic_xenophobe
+				}
+			}
+		}
+	}
+}
+gsm_policy_antitrust = {
+	category = economy
+	potential = {
+		is_country_type = default
+	}
+	option = {
+		name = "gsm_at_standard"
+		policy_flags = { gsm_at_standard }
+		ai_weight = {
+			weight = 100
+		}
+	}
+	option = {
+		name = "gsm_at_lax"
+		policy_flags = { gsm_at_lax }
+		ai_weight = {
+			weight = 0
+		}
+	}
+	option = {
+		name = "gsm_at_strict"
+		policy_flags = { gsm_at_strict }
+		ai_weight = {
+			weight = 0
+		}
+	}
+}
+gsm_policy_invest_pace = {
+	category = economy
+	potential = {
+		is_country_type = default
+	}
+	option = {
+		name = "gsm_ip_prudent"
+		policy_flags = { gsm_ip_prudent }
+		ai_weight = {
+			weight = 100
+		}
+	}
+	option = {
+		name = "gsm_ip_free"
+		policy_flags = { gsm_ip_free }
+		ai_weight = {
+			weight = 0
+		}
+	}
+}
+gsm_policy_new_colony_invest = {
+	category = economy
+	potential = {
+		is_country_type = default
+	}
+	option = {
+		name = "gsm_nci_open"
+		policy_flags = { gsm_nci_open }
+		ai_weight = {
+			weight = 100
+		}
+	}
+	option = {
+		name = "gsm_nci_restrict"
+		policy_flags = { gsm_nci_restrict }
+		ai_weight = {
+			weight = 0
+		}
+	}
+}

@@ -1,0 +1,34 @@
+namespace = gsm_market
+country_event = {
+	id = gsm_market.10
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = {
+		exists = event_target:gsm_exchange
+		exists = from
+		from = { NOT = { has_war_flag = gsm_war_seen } }
+	}
+	immediate = {
+		from = { set_war_flag = gsm_war_seen }
+		event_target:gsm_exchange = {
+			subtract_variable = { which = gsm_sent value = @gsm_war_shock }
+			gsm_clamp = { VAR = gsm_sent MIN = @gsm_sent_min MAX = @gsm_sent_max }
+		}
+	}
+}
+country_event = {
+	id = gsm_market.11
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = {
+		exists = event_target:gsm_exchange
+		NOT = { has_global_flag = gsm_peace_relief_applied }
+	}
+	immediate = {
+		set_timed_global_flag = { flag = gsm_peace_relief_applied days = 1 }
+		event_target:gsm_exchange = {
+			change_variable = { which = gsm_sent value = @gsm_peace_relief }
+			gsm_clamp = { VAR = gsm_sent MIN = @gsm_sent_min MAX = @gsm_sent_max }
+		}
+	}
+}

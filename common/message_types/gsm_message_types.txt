@@ -1,0 +1,31 @@
+message_type = {
+	key = GSM_MESSAGE_MARKET
+	icon = "GFX_message_event_generic"
+	icon_frame = 1
+	name = "GSM_MESSAGE_MARKET_TITLE"
+	sound = "notification"
+	ping = "ping_notification_green"
+	category = economy
+	default_toast = yes
+}
+
+# Financial Terminal window (market / portfolio / corps / ... pages).
+# Deliberately NOT hidden from Message Settings: in a co-op empire every
+# player shares one country, so one player paging through the terminal
+# opens the next page for everyone. Players who do not want to be pulled
+# along can open Message Settings and turn the popup off for this entry -
+# the terminal then only pings the notification list, and the window opens
+# on demand when they click it.
+message_type = {
+	key = GSM_MESSAGE_TERMINAL
+	icon = "GFX_message_event_generic"
+	icon_frame = 1
+	name = "GSM_MESSAGE_TERMINAL_TITLE"
+	sound = "notification"
+	ping = "ping_notification_green"
+	category = economy
+	message_setting_key = "GSM_MESSAGE_TERMINAL_SETTING"
+	default_popup = yes
+	default_notification = yes
+	default_toast = no
+}

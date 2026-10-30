@@ -1,0 +1,182 @@
+gsm_tick_ai = {
+	set_variable = { which = gsm_t_ai_month value = gsm_month }
+	every_playable_country = {
+		limit = {
+			is_ai = yes
+			gsm_is_market_country = yes
+		}
+		if = {
+			limit = { NOT = { is_variable_set = gsm_ai_phase } }
+			set_variable_to_random_value = { which = gsm_ai_phase min = 0 max = 11 rounded = yes }
+		}
+		set_variable = { which = gsm_t_rot value = event_target:gsm_exchange.gsm_t_ai_month }
+		change_variable = { which = gsm_t_rot value = gsm_ai_phase }
+		modulo_variable = { which = gsm_t_rot value = 12 }
+		if = {
+			limit = { check_variable = { which = gsm_t_rot value = 0 } }
+			gsm_ai_found = yes
+		}
+		set_variable = { which = gsm_t_rot value = event_target:gsm_exchange.gsm_t_ai_month }
+		change_variable = { which = gsm_t_rot value = gsm_ai_phase }
+		modulo_variable = { which = gsm_t_rot value = 6 }
+		if = {
+			limit = { check_variable = { which = gsm_t_rot value = 3 } }
+			gsm_ai_review = yes
+		}
+	}
+}
+gsm_ai_found = {
+	country_event = { id = gsm_fn.14 }
+}
+gsm_ai_review = {
+	country_event = { id = gsm_fn.13 }
+}
+gsm_ai_buy_within_budget = {
+	gsm_trade_quote_buy = yes
+	if = {
+		limit = {
+			check_variable = { which = gsm_t_trade_q value >= 1 }
+			check_variable = { which = gsm_t_trade_cost value <= gsm_t_budget }
+		}
+		gsm_trade_buy = yes
+		if = {
+			limit = { check_variable = { which = gsm_t_trade_ok value = 1 } }
+			subtract_variable = { which = gsm_t_budget value = gsm_t_trade_cost }
+		}
+	}
+}
+gsm_ai_value_score = {
+	set_variable = { which = gsm_t_ai_score value = gsm_fund }
+	gsm_div_safe = { VAR = gsm_t_ai_score BY = gsm_price }
+	gsm_clamp_max = { VAR = gsm_t_ai_score MAX = 100 }
+	set_variable = { which = gsm_t_y value = gsm_div_ttm }
+	gsm_div_safe = { VAR = gsm_t_y BY = gsm_price }
+	gsm_clamp_max = { VAR = gsm_t_y MAX = 100 }
+	change_variable = { which = gsm_t_y value = 1 }
+	multiply_variable = { which = gsm_t_ai_score value = gsm_t_y }
+	if = {
+		limit = { check_variable = { which = gsm_home_iid value = event_target:gsm_t_trader.gsm_t_my_iid } }
+		multiply_variable = { which = gsm_t_ai_score value = 1.5 }
+	}
+	if = {
+		limit = {
+			OR = {
+				check_variable = { which = gsm_float value < 1 }
+				has_country_flag = gsm_distress
+				has_country_flag = gsm_st
+				AND = {
+					NOT = { has_country_flag = gsm_neutral }
+					NOT = { check_variable = { which = gsm_home_iid value = event_target:gsm_t_trader.gsm_t_my_iid } }
+					NOT = {
+						OR = {
+							AND = {
+								exists = event_target:gsm_hq@this
+								event_target:gsm_hq@this = { exists = owner owner = { has_communications = event_target:gsm_t_trader } }
+							}
+							AND = {
+								is_country_type = gsm_group
+								exists = event_target:gsm_ghome@this
+								event_target:gsm_ghome@this = { has_communications = event_target:gsm_t_trader }
+							}
+						}
+					}
+				}
+			}
+		}
+		set_variable = { which = gsm_t_ai_score value = 0 }
+	}
+	if = {
+		limit = { check_variable = { which = gsm_t_ai_score value > 1.05 } }
+		set_variable = { which = gsm_t_ai_q value = gsm_shares }
+		multiply_variable = { which = gsm_t_ai_q value = @gsm_lot_small }
+		round_variable_to_closest = { which = gsm_t_ai_q value = 1 }
+		gsm_clamp_min = { VAR = gsm_t_ai_q MIN = 1 }
+		gsm_clamp_max = { VAR = gsm_t_ai_q MAX = gsm_float }
+		gsm_floor = { VAR = gsm_t_ai_q }
+		set_variable = { which = gsm_t_ai_cost value = gsm_t_ai_q }
+		gsm_div_safe = { VAR = gsm_t_ai_cost BY = gsm_shares }
+		multiply_variable = { which = gsm_t_ai_cost value = @gsm_impact_k }
+		multiply_variable = { which = gsm_t_ai_cost value = 0.5 }
+		change_variable = { which = gsm_t_ai_cost value = 1 }
+		multiply_variable = { which = gsm_t_ai_cost value = gsm_price }
+		multiply_variable = { which = gsm_t_ai_cost value = gsm_t_ai_q }
+		set_variable = { which = gsm_t_ai_fee value = gsm_t_ai_cost }
+		multiply_variable = { which = gsm_t_ai_fee value = event_target:gsm_t_trader.gsm_t_feer }
+		change_variable = { which = gsm_t_ai_cost value = gsm_t_ai_fee }
+		if = {
+			limit = { check_variable = { which = gsm_t_ai_cost value > event_target:gsm_t_trader.gsm_t_budget } }
+			set_variable = { which = gsm_t_ai_score value = 0 }
+		}
+	}
+}
+gsm_ai_cfd_one = {
+	if = {
+		limit = { has_country_flag = gsm_cfd@event_target:gsm_t_tc }
+		event_target:gsm_t_tc = {
+			set_variable = { which = gsm_t_iid value = prev.gsm_iid }
+			gsm_gen_cfd_get = yes
+			gsm_neutral_cfd_value = yes
+			set_variable = { which = gsm_t_cage value = event_target:gsm_exchange.gsm_month }
+			subtract_variable = { which = gsm_t_cage value = gsm_t_co }
+		}
+		set_variable = { which = gsm_t_ceq value = event_target:gsm_t_tc.gsm_t_ceq }
+		set_variable = { which = gsm_t_cm value = event_target:gsm_t_tc.gsm_t_cm }
+		set_variable = { which = gsm_t_cage value = event_target:gsm_t_tc.gsm_t_cage }
+		set_variable = { which = gsm_t_hi value = gsm_t_cm }
+		multiply_variable = { which = gsm_t_hi value = 1.3 }
+		set_variable = { which = gsm_t_lo value = gsm_t_cm }
+		multiply_variable = { which = gsm_t_lo value = 0.7 }
+		if = {
+			limit = {
+				OR = {
+					check_variable = { which = gsm_t_ceq value >= gsm_t_hi }
+					check_variable = { which = gsm_t_ceq value <= gsm_t_lo }
+					check_variable = { which = gsm_t_cage value >= 12 }
+				}
+			}
+			gsm_cfd_close = yes
+			if = {
+				limit = { check_variable = { which = gsm_t_cfd_ok value = 1 } }
+				change_variable = { which = gsm_t_cnpos value = -1 }
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { which = gsm_t_cnpos value < @gsm_ai_cfd_max } }
+		set_variable = { which = gsm_t_sig value = event_target:gsm_t_tc.gsm_fund }
+		set_variable = { which = gsm_t_x value = event_target:gsm_t_tc.gsm_price }
+		gsm_div_safe = { VAR = gsm_t_sig BY = gsm_t_x }
+		change_variable = { which = gsm_t_sig value = -1 }
+		set_variable = { which = gsm_t_cdir value = 0 }
+		if = {
+			limit = { check_variable = { which = gsm_t_sig value > @gsm_ai_cfd_signal } }
+			set_variable = { which = gsm_t_cdir value = 1 }
+		}
+		set_variable = { which = gsm_t_x value = @gsm_ai_cfd_signal }
+		multiply_variable = { which = gsm_t_x value = -1 }
+		if = {
+			limit = { check_variable = { which = gsm_t_sig value < gsm_t_x } }
+			set_variable = { which = gsm_t_cdir value = -1 }
+		}
+		export_resource_stockpile_to_variable = { resource = trade variable = gsm_t_tr }
+		set_variable = { which = gsm_t_x value = gsm_t_tr }
+		multiply_variable = { which = gsm_t_x value = @gsm_ai_cfd_margin }
+		if = {
+			limit = {
+				NOT = { check_variable = { which = gsm_t_cdir value = 0 } }
+				check_variable = { which = gsm_t_x value >= @gsm_ai_cfd_min_margin }
+			}
+			set_variable = { which = gsm_t_clev value = 2 }
+			if = {
+				limit = { check_variable = { which = gsm_t_tr value >= @gsm_ai_cfd_rich } }
+				set_variable = { which = gsm_t_clev value = 5 }
+			}
+			set_variable = { which = gsm_t_cmf value = @gsm_ai_cfd_margin }
+			gsm_cfd_open = yes
+			if = {
+				limit = { check_variable = { which = gsm_t_cfd_ok value = 1 } }
+				change_variable = { which = gsm_t_cnpos value = 1 }
+			}
+		}
+	}
+}

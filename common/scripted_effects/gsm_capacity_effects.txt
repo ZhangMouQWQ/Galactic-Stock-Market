@@ -1,0 +1,188 @@
+gsm_hk_phi = {
+	set_variable = { which = $OUT$ value = $IN$ }
+	if = {
+		limit = { check_variable = { which = $IN$ value >= 1 } }
+		set_variable = { which = $OUT$ value = @gsm_hk_free }
+		change_variable = { which = $OUT$ value = 1 }
+		divide_variable = { which = $OUT$ value = 2 }
+	}
+	else_if = {
+		limit = { check_variable = { which = $IN$ value > @gsm_hk_free } }
+		set_variable = { which = gsm_t_hkq value = 1 }
+		subtract_variable = { which = gsm_t_hkq value = $IN$ }
+		set_variable = { which = gsm_t_hka value = gsm_t_hkq }
+		multiply_variable = { which = gsm_t_hkq value = gsm_t_hka }
+		set_variable = { which = gsm_t_hka value = 1 }
+		subtract_variable = { which = gsm_t_hka value = @gsm_hk_free }
+		set_variable = { which = $OUT$ value = gsm_t_hka }
+		multiply_variable = { which = $OUT$ value = gsm_t_hka }
+		subtract_variable = { which = $OUT$ value = gsm_t_hkq }
+		divide_variable = { which = $OUT$ value = gsm_t_hka }
+		divide_variable = { which = $OUT$ value = 2 }
+		change_variable = { which = $OUT$ value = @gsm_hk_free }
+	}
+}
+gsm_hk_phi_m = {
+	set_variable = { which = $OUT$ value = 1 }
+	subtract_variable = { which = $OUT$ value = $IN$ }
+	set_variable = { which = gsm_t_hka value = 1 }
+	subtract_variable = { which = gsm_t_hka value = @gsm_hk_free }
+	divide_variable = { which = $OUT$ value = gsm_t_hka }
+	if = { limit = { check_variable = { which = $OUT$ value > 1 } } set_variable = { which = $OUT$ value = 1 } }
+	if = { limit = { check_variable = { which = $OUT$ value < 0 } } set_variable = { which = $OUT$ value = 0 } }
+}
+gsm_hk_planet_month = {
+	gsm_gen_hk_units = yes
+	set_variable = { which = gsm_hku value = gsm_t_hku0 }
+	set_variable = { which = gsm_hkm value = event_target:gsm_exchange.gsm_month }
+	if = {
+		limit = { is_variable_set = gsm_t_hkh }
+		set_variable = { which = gsm_hkc value = gsm_t_hkh }
+		divide_variable = { which = gsm_hkc value = 100 }
+		multiply_variable = { which = gsm_hkc value = @gsm_hk_k }
+		if = { limit = { check_variable = { which = gsm_hkc value < 0.01 } } set_variable = { which = gsm_hkc value = 0.01 } }
+		set_variable = { which = gsm_t_hky value = gsm_t_hku0 }
+		divide_variable = { which = gsm_t_hky value = gsm_hkc }
+		set_variable = { which = gsm_hkcu value = gsm_t_hky }
+		if = { limit = { check_variable = { which = gsm_hkcu value > 1 } } set_variable = { which = gsm_hkcu value = 1 } }
+		set_variable = { which = gsm_hkf value = 1 }
+		if = {
+			limit = { check_variable = { which = gsm_t_hky value > @gsm_hk_free } }
+			gsm_hk_phi = { IN = gsm_t_hky OUT = gsm_t_hkx }
+			set_variable = { which = gsm_hkf value = gsm_t_hkx }
+			divide_variable = { which = gsm_hkf value = gsm_t_hky }
+		}
+		set_variable = { which = gsm_t_hkz value = 0 }
+		if = {
+			limit = { event_target:gsm_exchange = { is_variable_set = gsm_hk_m0 } }
+			set_variable = { which = gsm_t_hkz value = event_target:gsm_exchange.gsm_month }
+			subtract_variable = { which = gsm_t_hkz value = event_target:gsm_exchange.gsm_hk_m0 }
+			divide_variable = { which = gsm_t_hkz value = @gsm_hk_phase_months }
+			if = { limit = { check_variable = { which = gsm_t_hkz value > 1 } } set_variable = { which = gsm_t_hkz value = 1 } }
+			if = { limit = { check_variable = { which = gsm_t_hkz value < 0 } } set_variable = { which = gsm_t_hkz value = 0 } }
+		}
+		set_variable = { which = gsm_t_hkx value = 1 }
+		subtract_variable = { which = gsm_t_hkx value = gsm_hkf }
+		multiply_variable = { which = gsm_t_hkx value = gsm_t_hkz }
+		set_variable = { which = gsm_hkf value = 1 }
+		subtract_variable = { which = gsm_hkf value = gsm_t_hkx }
+		set_variable = { which = gsm_hks value = 0 }
+		if = {
+			limit = {
+				is_variable_set = gsm_bu_construction
+				check_variable = { which = gsm_t_hkh value >= 100 }
+			}
+			set_variable = { which = gsm_t_hkx value = gsm_t_hkh }
+			divide_variable = { which = gsm_t_hkx value = 100 }
+			set_variable = { which = gsm_hks value = gsm_bu_construction }
+			divide_variable = { which = gsm_hks value = gsm_t_hkx }
+			if = { limit = { check_variable = { which = gsm_hks value > 1 } } set_variable = { which = gsm_hks value = 1 } }
+			if = { limit = { check_variable = { which = gsm_hks value < 0 } } set_variable = { which = gsm_hks value = 0 } }
+		}
+		set_variable = { which = gsm_hkfe value = gsm_hks }
+		multiply_variable = { which = gsm_hkfe value = @gsm_cap_fee }
+		set_variable = { which = gsm_hkfp value = gsm_hkfe }
+		multiply_variable = { which = gsm_hkfp value = gsm_hku }
+	}
+	else = {
+		set_variable = { which = gsm_hkc value = 0.01 }
+		set_variable = { which = gsm_hkf value = 1 }
+		set_variable = { which = gsm_hks value = 0 }
+		set_variable = { which = gsm_hkcu value = 0 }
+		set_variable = { which = gsm_hkfe value = 0 }
+		set_variable = { which = gsm_hkfp value = 0 }
+	}
+	if = {
+		limit = { is_variable_set = gsm_hkbl }
+		multiply_variable = { which = gsm_hkbl value = 0.9 }
+		if = { limit = { check_variable = { which = gsm_hkbl value > gsm_hkc } } set_variable = { which = gsm_hkbl value = gsm_hkc } }
+		set_variable = { which = gsm_t_hkx value = @gsm_hk_k }
+		divide_variable = { which = gsm_t_hkx value = 2 }
+		if = { limit = { check_variable = { which = gsm_hkbl value < gsm_t_hkx } } set_variable = { which = gsm_hkbl value = 0 } }
+	}
+	if = {
+		limit = { is_variable_set = gsm_hkbw }
+		multiply_variable = { which = gsm_hkbw value = 0.9 }
+		if = { limit = { check_variable = { which = gsm_hkbw value > gsm_hkc } } set_variable = { which = gsm_hkbw value = gsm_hkc } }
+		if = { limit = { check_variable = { which = gsm_hkbw value < @gsm_hkbw_min } } set_variable = { which = gsm_hkbw value = 0 } }
+	}
+}
+gsm_hk_site = {
+	gsm_gen_hk_units = yes
+	if = {
+		limit = {
+			is_variable_set = gsm_pjm
+			check_variable = { which = gsm_pjm value = event_target:gsm_exchange.gsm_month }
+			is_variable_set = gsm_pjob
+		}
+		set_variable = { which = gsm_t_hkx value = gsm_pjob }
+		divide_variable = { which = gsm_t_hkx value = 100 }
+		change_variable = { which = gsm_t_hku0 value = gsm_t_hkx }
+	}
+	set_variable = { which = gsm_t_hkc value = 9999 }
+	set_variable = { which = gsm_t_hks value = 0 }
+	if = {
+		limit = { is_variable_set = gsm_t_hkh }
+		set_variable = { which = gsm_t_hkc value = gsm_t_hkh }
+		divide_variable = { which = gsm_t_hkc value = 100 }
+		multiply_variable = { which = gsm_t_hkc value = @gsm_hk_k }
+		if = { limit = { check_variable = { which = gsm_t_hkc value < 0.01 } } set_variable = { which = gsm_t_hkc value = 0.01 } }
+		if = {
+			limit = {
+				is_variable_set = gsm_hkm
+				check_variable = { which = gsm_hkm value = event_target:gsm_exchange.gsm_month }
+				is_variable_set = gsm_hks
+			}
+			set_variable = { which = gsm_t_hks value = gsm_hks }
+		}
+		else_if = {
+			limit = {
+				is_variable_set = gsm_bu_construction
+				check_variable = { which = gsm_t_hkh value >= 100 }
+			}
+			set_variable = { which = gsm_t_hkx value = gsm_t_hkh }
+			divide_variable = { which = gsm_t_hkx value = 100 }
+			set_variable = { which = gsm_t_hks value = gsm_bu_construction }
+			divide_variable = { which = gsm_t_hks value = gsm_t_hkx }
+			if = { limit = { check_variable = { which = gsm_t_hks value > 1 } } set_variable = { which = gsm_t_hks value = 1 } }
+			if = { limit = { check_variable = { which = gsm_t_hks value < 0 } } set_variable = { which = gsm_t_hks value = 0 } }
+		}
+	}
+	set_variable = { which = gsm_t_hkr0 value = gsm_t_hkc }
+	subtract_variable = { which = gsm_t_hkr0 value = gsm_t_hku0 }
+	set_variable = { which = gsm_t_hku value = gsm_t_hku0 }
+	divide_variable = { which = gsm_t_hku value = gsm_t_hkc }
+	gsm_hk_phi_m = { IN = gsm_t_hku OUT = gsm_t_hkp }
+	set_variable = { which = gsm_t_hkud value = gsm_t_hku0 }
+	if = { limit = { is_variable_set = gsm_hkbl } change_variable = { which = gsm_t_hkud value = gsm_hkbl } }
+	divide_variable = { which = gsm_t_hkud value = gsm_t_hkc }
+	if = { limit = { check_variable = { which = gsm_t_hkud value > 1 } } set_variable = { which = gsm_t_hkud value = 1 } }
+}
+gsm_hk_block = {
+	set_variable = { which = gsm_t_hkx value = gsm_t_hku0 }
+	divide_variable = { which = gsm_t_hkx value = gsm_t_hkc }
+	set_variable = { which = gsm_t_hky value = gsm_t_hku0 }
+	change_variable = { which = gsm_t_hky value = gsm_t_hkn }
+	divide_variable = { which = gsm_t_hky value = gsm_t_hkc }
+	if = {
+		limit = {
+			check_variable = { which = gsm_t_hkn value > 0 }
+			check_variable = { which = gsm_t_hky value <= @gsm_hk_free }
+		}
+		set_variable = { which = gsm_t_hkb value = 1 }
+	}
+	else_if = {
+		limit = { check_variable = { which = gsm_t_hkn value > 0 } }
+		gsm_hk_phi = { IN = gsm_t_hky OUT = gsm_t_hkz }
+		gsm_hk_phi = { IN = gsm_t_hkx OUT = gsm_t_hky }
+		set_variable = { which = gsm_t_hkb value = gsm_t_hkz }
+		subtract_variable = { which = gsm_t_hkb value = gsm_t_hky }
+		multiply_variable = { which = gsm_t_hkb value = gsm_t_hkc }
+		divide_variable = { which = gsm_t_hkb value = gsm_t_hkn }
+	}
+	else = {
+		gsm_hk_phi_m = { IN = gsm_t_hkx OUT = gsm_t_hkb }
+	}
+	if = { limit = { check_variable = { which = gsm_t_hkb value > 1 } } set_variable = { which = gsm_t_hkb value = 1 } }
+	if = { limit = { check_variable = { which = gsm_t_hkb value < 0 } } set_variable = { which = gsm_t_hkb value = 0 } }
+}

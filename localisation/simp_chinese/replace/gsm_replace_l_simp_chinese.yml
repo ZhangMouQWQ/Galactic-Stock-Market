@@ -1,0 +1,4 @@
+﻿l_simp_chinese:
+ subject_holding:0 "宗主国 / 企业分部"
+ HOLDINGS_EMPTY_subject_holding:0 "没有宗主地产或企业分部"
+ HOLDINGS_DESC_subject_holding:0 "在附属国['concept_subject_agreement']允许的前提下，['concept_overlord_holding']才可由§H宗主§!在其§H附属国§!的殖民地修建。§H企业分部§!归银河证券交易所所有，每座对应一个在此星球经营的行业。"

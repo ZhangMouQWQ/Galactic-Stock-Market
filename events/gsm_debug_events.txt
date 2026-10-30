@@ -1,0 +1,315 @@
+namespace = gsm_debug
+country_event = {
+	id = gsm_debug.1
+	title = gsm_debug.1.name
+	desc = {
+		trigger = { NOT = { exists = event_target:gsm_sel@root } }
+		text = gsm_debug.1.desc
+	}
+	desc = {
+		trigger = { gsm_debug_sel_ok = yes }
+		text = gsm_debug.1.desc_sel
+	}
+	desc = {
+		trigger = { exists = event_target:gsm_sel@root NOT = { gsm_debug_sel_ok = yes } }
+		text = gsm_debug.1.desc_selx
+	}
+	picture = GFX_evt_galactic_market
+	show_sound = event_administrative_work
+	is_triggered_only = yes
+	immediate = {
+		gsm_ensure_exchange = yes
+		event_target:gsm_exchange = { save_event_target_as = gsm_ex }
+		if = {
+			limit = { exists = event_target:gsm_sel@root }
+			event_target:gsm_sel@root = { save_event_target_as = gsm_dsel }
+		}
+	}
+	option = {
+		name = gsm_debug.1.a
+		hidden_effect = {
+			gsm_debug_found_test = yes
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.b
+		hidden_effect = {
+			event_target:gsm_exchange = { gsm_monthly_tick = yes }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.c
+		add_resource = { trade = 10000 }
+		hidden_effect = { country_event = { id = gsm_debug.1 } }
+	}
+	option = {
+		name = gsm_debug.1.d
+		hidden_effect = {
+			if = {
+				limit = { has_global_flag = gsm_debug_log }
+				remove_global_flag = gsm_debug_log
+			}
+			else = {
+				set_global_flag = gsm_debug_log
+			}
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.e
+		hidden_effect = { country_event = { id = gsm_ui.1 } }
+	}
+	option = {
+		name = gsm_debug.1.f
+		trigger = {
+			OR = {
+				gsm_debug_sel_ok = yes
+				AND = {
+					exists = event_target:gsm_sel@root
+					event_target:gsm_sel@root = { gsm_is_live_group = yes }
+				}
+			}
+		}
+		hidden_effect = {
+			event_target:gsm_sel@root = { change_variable = { which = gsm_cash value = 5000 } }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.g
+		trigger = { gsm_debug_sel_ok = yes }
+		hidden_effect = { country_event = { id = gsm_debug.10 } }
+	}
+	option = {
+		name = gsm_debug.1.h
+		trigger = { gsm_debug_sel_ok = yes }
+		hidden_effect = {
+			country_event = { id = gsm_debug.11 }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.i
+		trigger = { gsm_debug_sel_ok = yes }
+		hidden_effect = {
+			country_event = { id = gsm_debug.12 }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.j
+		trigger = { gsm_debug_sel_ok = yes }
+		hidden_effect = {
+			country_event = { id = gsm_debug.13 }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.k
+		hidden_effect = {
+			gsm_debug_validate = yes
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.m
+		hidden_effect = {
+			country_event = { id = gsm_dbgen.1 }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.n
+		trigger = { gsm_debug_sel_ok = yes }
+		hidden_effect = {
+			country_event = { id = gsm_debug.14 }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.o
+		trigger = { exists = event_target:gsm_nt_jarzz }
+		hidden_effect = {
+			country_event = { id = gsm_debug.15 }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.p
+		trigger = { exists = event_target:gsm_nt_jarzz }
+		hidden_effect = {
+			country_event = { id = gsm_debug.16 }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.q
+		trigger = { exists = event_target:gsm_nt_jarzz }
+		hidden_effect = {
+			country_event = { id = gsm_debug.17 }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.r
+		trigger = { exists = capital_scope }
+		hidden_effect = {
+			country_event = { id = gsm_debug.18 }
+			country_event = { id = gsm_debug.1 }
+		}
+	}
+	option = {
+		name = gsm_debug.1.l
+		default_hide_option = yes
+	}
+}
+country_event = {
+	id = gsm_debug.14
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = { gsm_debug_sel_ok = yes }
+	immediate = {
+		event_target:gsm_sel@root = {
+			set_variable = { which = gsm_t_bamt value = 1000 }
+			gsm_debug_bond = yes
+		}
+	}
+}
+country_event = {
+	id = gsm_debug.10
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = { gsm_debug_sel_ok = yes }
+	immediate = {
+		event_target:gsm_sel@root = {
+			if = {
+				limit = { gsm_is_live_company = yes NOT = { has_country_flag = gsm_neutral } }
+				gsm_company_sync_home = yes
+				gsm_company_rs_force = yes
+			}
+		}
+	}
+}
+country_event = {
+	id = gsm_debug.11
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = { gsm_debug_sel_ok = yes }
+	immediate = {
+		event_target:gsm_sel@root = {
+			gsm_company_sync_home = yes
+			gsm_company_liquidate = yes
+		}
+	}
+}
+country_event = {
+	id = gsm_debug.12
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = { gsm_debug_sel_ok = yes exists = capital_scope }
+	immediate = {
+		capital_scope = { save_event_target_as = gsm_t_site }
+		event_target:gsm_sel@root = {
+			set_variable = { which = gsm_t_amt value = 2000 }
+			gsm_asset_invest = yes
+			change_variable = { which = gsm_k value = 2000 }
+		}
+	}
+}
+country_event = {
+	id = gsm_debug.13
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = { gsm_debug_sel_ok = yes exists = capital_scope }
+	immediate = {
+		capital_scope = { save_event_target_as = gsm_t_site }
+		event_target:gsm_sel@root = { gsm_asset_divest = yes }
+	}
+}
+country_event = {
+	id = gsm_debug.15
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = { exists = event_target:gsm_nt_jarzz }
+	immediate = {
+		event_target:gsm_nt_jarzz = { gsm_jz_rg_force_arm = yes }
+	}
+}
+country_event = {
+	id = gsm_debug.16
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = { exists = event_target:gsm_nt_jarzz }
+	immediate = {
+		event_target:gsm_nt_jarzz = { gsm_jz_rg_force_strike = yes }
+	}
+}
+country_event = {
+	id = gsm_debug.17
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = { exists = event_target:gsm_nt_jarzz }
+	immediate = {
+		event_target:gsm_nt_jarzz = {
+			gsm_default = { VAR = gsm_jt_mode VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_rem VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_age VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_cool VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_q VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_sn VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_rn VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_ns VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_nc VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_ncx VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_hl VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_hp VALUE = 0 }
+			gsm_default = { VAR = gsm_jt_last VALUE = 0 }
+			log = "GALMARKET_PRICE: jarzz regime state mode [This.gsm_jt_mode] rem [This.gsm_jt_rem] age [This.gsm_jt_age] cool [This.gsm_jt_cool] qualifying [This.gsm_jt_q] slide [This.gsm_jt_sn] recovery [This.gsm_jt_rn] strikes [This.gsm_jt_ns] covers [This.gsm_jt_nc] cancelled [This.gsm_jt_ncx] human liquidations [This.gsm_jt_hl] with refund [This.gsm_jt_hp] last strike month [This.gsm_jt_last] price [This.gsm_price]"
+		}
+	}
+}
+country_event = {
+	id = gsm_debug.18
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = { exists = capital_scope }
+	immediate = {
+		capital_scope = { gsm_planet_factors_memo = yes }
+		gsm_hcap_debug_print = yes
+		log = "GALMARKET_ASSET: healthcare cap on [This.Capital.GetName]: cap [This.gsm_t_hcd1] units [This.gsm_t_hcd2] room [This.gsm_t_hcd3] own subsidy [This.gsm_t_hcd4] vanilla housing [This.gsm_t_hcd5] max 12 months [This.gsm_t_hcd6] above [This.gsm_t_hcd7] owner paid [This.gsm_t_hcd8] last cap sale month [This.gsm_t_hcd9]"
+	}
+}
+country_event = {
+	id = gsm_debug.20
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_gen_ai_types_alive = yes
+		gsm_gen_ai_need_scan = yes
+		gsm_gen_ai_pick_industry = yes
+		if = {
+			limit = { check_variable = { which = gsm_wz_ind value = 0 } }
+			set_variable = { which = gsm_wz_ind value = 2 }
+		}
+		gsm_gen_ai_pick_hq = yes
+		if = {
+			limit = { check_variable = { which = gsm_t_hq_ok value = 0 } }
+			capital_scope = { save_global_event_target_as = gsm_wz_hq@prev }
+		}
+		set_variable = { which = gsm_wz_form value = 2 }
+		set_variable = { which = gsm_wz_size value = 2 }
+		add_resource = { trade = 3000 }
+		gsm_company_found = yes
+		if = {
+			limit = { check_variable = { which = gsm_t_found_ok value = 1 } }
+			event_target:gsm_t_newco = { save_global_event_target_as = gsm_sel@prev }
+			log = "GALMARKET: debug: [This.GetName] founded test company [gsm_t_newco.GetRealName]"
+		}
+		else = {
+			add_resource = { trade = -3000 }
+			log = "GALMARKET: debug: [This.GetName] test founding refused why=[This.gsm_t_found_why] ncos=[This.gsm_t_ncos] cap=[This.gsm_t_capacity] F=[This.gsm_t_F]"
+		}
+	}
+}

@@ -1,0 +1,243 @@
+gsm_is_market_country = {
+	is_country_type = default
+}
+gsm_is_or_was_human = {
+	has_country_flag = gsm_was_human
+}
+gsm_has_iid = {
+	is_variable_set = gsm_iid
+	check_variable = { which = gsm_iid value >= 1 }
+}
+gsm_is_company = {
+	is_country_type = gsm_company
+}
+gsm_is_live_company = {
+	is_country_type = gsm_company
+	NOT = { has_country_flag = gsm_defunct }
+}
+gsm_is_listed_company = {
+	is_country_type = gsm_company
+	has_country_flag = gsm_listed
+	NOT = { has_country_flag = gsm_defunct }
+}
+gsm_is_live_group = {
+	is_country_type = gsm_group
+	NOT = { has_country_flag = gsm_defunct }
+}
+gsm_is_listed_group = {
+	is_country_type = gsm_group
+	has_country_flag = gsm_listed
+	NOT = { has_country_flag = gsm_defunct }
+}
+gsm_is_security = {
+	OR = {
+		is_country_type = gsm_company
+		is_country_type = gsm_group
+	}
+}
+gsm_is_live_security = {
+	OR = {
+		gsm_is_live_company = yes
+		gsm_is_live_group = yes
+	}
+}
+gsm_is_listed_security = {
+	OR = {
+		gsm_is_listed_company = yes
+		gsm_is_listed_group = yes
+	}
+}
+gsm_register_has_room = {
+	count_country = {
+		limit = { gsm_is_live_security = yes }
+		count < @gsm_max_slots
+	}
+}
+gsm_can_found_now = {
+	gsm_is_market_country = yes
+	gsm_register_has_room = yes
+	gsm_has_iid = yes
+	exists = event_target:gsm_wz_hq@this
+	event_target:gsm_wz_hq@this = {
+		gsm_planet_investable = yes
+		owner = { is_same_value = event_target:gsm_t_founder }
+		NOT = { gsm_gen_wz_ind_restricted_here = yes }
+	}
+	check_variable = { which = gsm_t_ncos value < gsm_t_capacity }
+	check_variable = { which = gsm_t_cap_total value > 0 }
+	resource_stockpile_compare = { resource = trade value >= 1 mult = gsm_t_state_pay }
+	gsm_gen_ind_available = yes
+	gsm_gen_ind_unit_ok = yes
+}
+gsm_planet_investable = {
+	is_colony = yes
+	exists = owner
+	is_controlled_by = owner
+	NOT = { has_planet_flag = gsm_invest_restricted }
+	NOT = { gsm_planet_class_barred = yes }
+}
+gsm_planet_class_barred = {
+	is_planet_class = pc_cosmogenesis_world
+}
+gsm_planet_companies_entry = {
+	exists = owner
+	owner = { gsm_is_market_country = yes }
+	NOT = { gsm_planet_class_barred = yes }
+}
+gsm_can_steer_investment = {
+	NOT = { has_policy_flag = gsm_ir_laissez_faire }
+}
+gsm_invest_prudent = {
+	NOT = { has_policy_flag = gsm_ip_free }
+}
+gsm_ui_row_filter = {
+	OR = {
+		root = { check_variable = { which = gsm_ui_filter value = 1 } }
+		AND = {
+			root = { check_variable = { which = gsm_ui_filter value = 2 } }
+			check_variable = { which = gsm_home_iid value = root.gsm_ui_my_iid }
+		}
+		AND = {
+			root = { check_variable = { which = gsm_ui_filter value = 3 } }
+			NOT = { check_variable = { which = gsm_home_iid value = root.gsm_ui_my_iid } }
+		}
+		AND = {
+			root = { check_variable = { which = gsm_ui_filter value = 4 } }
+			root = { has_country_flag = gsm_holds@prev }
+		}
+	}
+	OR = {
+		root = { check_variable = { which = gsm_ui_sector value = 0 } }
+		check_variable = { which = gsm_class value = root.gsm_ui_sector }
+	}
+}
+gsm_ui_visible = {
+	OR = {
+		has_country_flag = gsm_neutral
+		check_variable = { which = gsm_home_iid value = root.gsm_ui_my_iid }
+		root = { has_country_flag = gsm_holds@prev }
+		AND = {
+			exists = event_target:gsm_hq@this
+			event_target:gsm_hq@this = {
+				exists = owner
+				owner = {
+					OR = {
+						is_same_value = root
+						has_communications = root
+					}
+				}
+			}
+		}
+		AND = {
+			is_country_type = gsm_group
+			exists = event_target:gsm_ghome@this
+			event_target:gsm_ghome@this = {
+				OR = {
+					is_same_value = root
+					has_communications = root
+				}
+			}
+		}
+	}
+}
+gsm_visible_to_reader = {
+	OR = {
+		has_country_flag = gsm_neutral
+		AND = {
+			event_target:gsm_t_reader = { gsm_has_iid = yes }
+			check_variable = { which = gsm_home_iid value = event_target:gsm_t_reader.gsm_iid }
+		}
+		event_target:gsm_t_reader = { has_country_flag = gsm_holds@prev }
+		AND = {
+			exists = event_target:gsm_hq@this
+			event_target:gsm_hq@this = {
+				exists = owner
+				owner = {
+					OR = {
+						is_same_value = event_target:gsm_t_reader
+						has_communications = event_target:gsm_t_reader
+					}
+				}
+			}
+		}
+		AND = {
+			is_country_type = gsm_group
+			exists = event_target:gsm_ghome@this
+			event_target:gsm_ghome@this = {
+				OR = {
+					is_same_value = event_target:gsm_t_reader
+					has_communications = event_target:gsm_t_reader
+				}
+			}
+		}
+	}
+}
+gsm_ui_row_market = {
+	gsm_is_listed_security = yes
+	gsm_ui_row_filter = yes
+	gsm_ui_visible = yes
+}
+gsm_ui_row_directory = {
+	gsm_is_security = yes
+	gsm_ui_row_filter = yes
+	gsm_ui_visible = yes
+}
+gsm_ui_row_domestic = {
+	gsm_is_company = yes
+	check_variable = { which = gsm_home_iid value = root.gsm_ui_my_iid }
+}
+gsm_ui_row_portfolio = {
+	gsm_is_security = yes
+	root = { has_country_flag = gsm_holds@prev }
+}
+gsm_fdi_legal_host = {
+	gsm_is_market_country = yes
+	is_gestalt = no
+	NOT = { is_same_value = event_target:gsm_t_home }
+	has_communications = event_target:gsm_t_home
+	NOT = { is_at_war_with = event_target:gsm_t_home }
+	NOT = { has_policy_flag = gsm_fdi_forbidden }
+	OR = {
+		has_policy_flag = gsm_fdi_open
+		has_commercial_pact = event_target:gsm_t_home
+	}
+	NOT = {
+		AND = {
+			event_target:gsm_t_home = { is_variable_set = gsm_sanc check_variable = { which = gsm_sanc value > 0 } }
+			is_galactic_community_member = yes
+			NOT = { AND = { is_variable_set = gsm_sanc check_variable = { which = gsm_sanc value > 0 } } }
+		}
+	}
+}
+gsm_company_may_invest_abroad = {
+	NOT = { has_country_flag = gsm_gestalt_co }
+	NOT = { gsm_gen_ind_policy_bound = yes }
+	event_target:gsm_t_home = { is_gestalt = no }
+}
+gsm_company_may_hold_abroad = {
+	gsm_company_may_invest_abroad = yes
+	event_target:gsm_t_home = { NOT = { has_policy_flag = gsm_ofdi_forbidden } }
+}
+gsm_can_nationalise = {
+	NOT = { has_country_flag = gsm_home_sold }
+	OR = {
+		has_country_flag = gsm_listed
+		check_variable = { which = gsm_float value > 0 }
+		check_variable = { which = gsm_foreign value > 0 }
+		has_country_flag = gsm_in_grp
+	}
+}
+gsm_ren_pl_valid = {
+	exists = event_target:gsm_ren_pl@root
+	event_target:gsm_ren_pl@root = {
+		exists = owner
+		owner = { is_same_value = root }
+	}
+}
+gsm_debug_sel_ok = {
+	exists = event_target:gsm_sel@root
+	event_target:gsm_sel@root = {
+		gsm_is_live_company = yes
+		NOT = { has_country_flag = gsm_neutral }
+	}
+}

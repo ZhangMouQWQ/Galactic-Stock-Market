@@ -1,0 +1,26 @@
+namespace = gsm_do
+country_event = {
+	id = gsm_do.1
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		if = {
+			limit = { gsm_has_iid = yes }
+			save_event_target_as = gsm_t_dout_home
+			every_country = {
+				limit = {
+					gsm_is_live_company = yes
+					gsm_gen_ind_policy_bound = yes
+					check_variable = { which = gsm_home_iid value = event_target:gsm_t_dout_home.gsm_iid }
+				}
+				set_country_flag = gsm_dout_ended
+				gsm_company_sync_home = yes
+				gsm_company_liquidate = yes
+			}
+		}
+		if = {
+			limit = { has_global_flag = gsm_debug_log }
+			log = "GALMARKET_COMPANY: defense outsourcing ended for [This.GetName]"
+		}
+	}
+}

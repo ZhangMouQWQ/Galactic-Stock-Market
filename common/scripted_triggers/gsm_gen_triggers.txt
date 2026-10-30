@@ -1,0 +1,324 @@
+gsm_gen_ind_ok_energy = {
+	always = yes
+}
+gsm_gen_ind_ok_minerals = {
+	always = yes
+}
+gsm_gen_ind_ok_food = {
+	always = yes
+}
+gsm_gen_ind_ok_trade = {
+	always = yes
+}
+gsm_gen_ind_ok_consumer_goods = {
+	is_wilderness_empire = no
+}
+gsm_gen_ind_ok_alloys = {
+	always = yes
+}
+gsm_gen_ind_ok_physics_research = {
+	always = yes
+}
+gsm_gen_ind_ok_society_research = {
+	always = yes
+}
+gsm_gen_ind_ok_engineering_research = {
+	always = yes
+}
+gsm_gen_ind_ok_unity = {
+	always = yes
+}
+gsm_gen_ind_ok_influence = {
+	is_gestalt = no
+}
+gsm_gen_ind_ok_media = {
+	always = yes
+}
+gsm_gen_ind_ok_healthcare = {
+	always = yes
+}
+gsm_gen_ind_ok_construction = {
+	always = yes
+}
+gsm_gen_ind_ok_military = {
+	is_gestalt = no
+	has_policy_flag = gsm_dout_on
+}
+gsm_gen_ind_ok_security = {
+	is_gestalt = no
+	has_policy_flag = gsm_dout_on
+}
+gsm_gen_ind_available = {
+	OR = {
+		AND = { check_variable = { which = gsm_wz_ind value = 1 } gsm_gen_ind_ok_energy = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 2 } gsm_gen_ind_ok_minerals = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 3 } gsm_gen_ind_ok_food = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 4 } gsm_gen_ind_ok_trade = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 5 } gsm_gen_ind_ok_consumer_goods = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 6 } gsm_gen_ind_ok_alloys = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 7 } gsm_gen_ind_ok_physics_research = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 8 } gsm_gen_ind_ok_society_research = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 9 } gsm_gen_ind_ok_engineering_research = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 10 } gsm_gen_ind_ok_unity = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 11 } gsm_gen_ind_ok_influence = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 12 } gsm_gen_ind_ok_media = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 13 } gsm_gen_ind_ok_healthcare = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 14 } gsm_gen_ind_ok_construction = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 15 } gsm_gen_ind_ok_military = yes }
+		AND = { check_variable = { which = gsm_wz_ind value = 16 } gsm_gen_ind_ok_security = yes }
+	}
+}
+gsm_gen_ind_policy_bound = {
+	OR = {
+		has_country_flag = gsm_ind_military
+		has_country_flag = gsm_ind_security
+	}
+}
+gsm_gen_ind_public = {
+	OR = {
+		check_variable = { which = gsm_ind value = 12 }
+		check_variable = { which = gsm_ind value = 13 }
+		check_variable = { which = gsm_ind value = 14 }
+		check_variable = { which = gsm_ind value = 15 }
+		check_variable = { which = gsm_ind value = 16 }
+	}
+}
+gsm_gen_ai_sub_ind = {
+	OR = {
+		AND = { check_variable = { which = gsm_t_gst value = 0 } OR = { check_variable = { which = gsm_ind value = 7 } check_variable = { which = gsm_ind value = 8 } check_variable = { which = gsm_ind value = 9 } check_variable = { which = gsm_ind value = 5 } } }
+		AND = { check_variable = { which = gsm_t_gst value = 1 } OR = { check_variable = { which = gsm_ind value = 7 } check_variable = { which = gsm_ind value = 8 } check_variable = { which = gsm_ind value = 9 } check_variable = { which = gsm_ind value = 1 } check_variable = { which = gsm_ind value = 2 } } }
+	}
+}
+gsm_gen_ind_housing = {
+	OR = {
+		check_variable = { which = gsm_ind value = 14 }
+	}
+}
+gsm_gen_sub_def_energy = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_minerals = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_food = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_trade = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_consumer_goods = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_alloys = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_physics_research = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_society_research = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_engineering_research = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_unity = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_influence = {
+	exists = owner
+	owner = { has_policy_flag = gsm_sub_all }
+}
+gsm_gen_sub_def_media = {
+	exists = owner
+	owner = { OR = { has_policy_flag = gsm_sub_all has_policy_flag = gsm_sub_public } }
+}
+gsm_gen_sub_def_healthcare = {
+	exists = owner
+	owner = { OR = { has_policy_flag = gsm_sub_all has_policy_flag = gsm_sub_public } }
+}
+gsm_gen_sub_def_construction = {
+	exists = owner
+	owner = { OR = { has_policy_flag = gsm_sub_all has_policy_flag = gsm_sub_public } }
+}
+gsm_gen_sub_def_military = {
+	exists = owner
+	owner = { OR = { has_policy_flag = gsm_sub_all has_policy_flag = gsm_sub_public } }
+}
+gsm_gen_sub_def_security = {
+	exists = owner
+	owner = { OR = { has_policy_flag = gsm_sub_all has_policy_flag = gsm_sub_public } }
+}
+gsm_gen_sub_energy = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_energy }
+	OR = { has_planet_flag = gsm_sbo_energy owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_minerals = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_minerals }
+	OR = { has_planet_flag = gsm_sbo_minerals owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_food = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_food }
+	OR = { has_planet_flag = gsm_sbo_food owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_trade = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_trade }
+	OR = { has_planet_flag = gsm_sbo_trade owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_consumer_goods = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_consumer_goods }
+	OR = { has_planet_flag = gsm_sbo_consumer_goods owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_alloys = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_alloys }
+	OR = { has_planet_flag = gsm_sbo_alloys owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_physics_research = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_physics_research }
+	OR = { has_planet_flag = gsm_sbo_physics_research owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_society_research = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_society_research }
+	OR = { has_planet_flag = gsm_sbo_society_research owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_engineering_research = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_engineering_research }
+	OR = { has_planet_flag = gsm_sbo_engineering_research owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_unity = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_unity }
+	OR = { has_planet_flag = gsm_sbo_unity owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_influence = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_influence }
+	OR = { has_planet_flag = gsm_sbo_influence owner = { OR = { has_policy_flag = gsm_sub_all } } }
+}
+gsm_gen_sub_media = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_media }
+	OR = { has_planet_flag = gsm_sbo_media owner = { OR = { has_policy_flag = gsm_sub_all has_policy_flag = gsm_sub_public } } }
+}
+gsm_gen_sub_healthcare = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_healthcare }
+	OR = { has_planet_flag = gsm_sbo_healthcare owner = { OR = { has_policy_flag = gsm_sub_all has_policy_flag = gsm_sub_public } } }
+}
+gsm_gen_sub_construction = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_construction }
+	OR = { has_planet_flag = gsm_sbo_construction owner = { OR = { has_policy_flag = gsm_sub_all has_policy_flag = gsm_sub_public } } }
+}
+gsm_gen_sub_military = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_military }
+	OR = { has_planet_flag = gsm_sbo_military owner = { OR = { has_policy_flag = gsm_sub_all has_policy_flag = gsm_sub_public } } }
+}
+gsm_gen_sub_security = {
+	exists = owner
+	NOT = { has_planet_flag = gsm_sbx_security }
+	OR = { has_planet_flag = gsm_sbo_security owner = { OR = { has_policy_flag = gsm_sub_all has_policy_flag = gsm_sub_public } } }
+}
+gsm_gen_site_sub_ok = {
+	OR = {
+		AND = { check_variable = { which = gsm_ind value = 1 } event_target:gsm_t_site = { gsm_gen_sub_energy = yes } }
+		AND = { check_variable = { which = gsm_ind value = 2 } event_target:gsm_t_site = { gsm_gen_sub_minerals = yes } }
+		AND = { check_variable = { which = gsm_ind value = 3 } event_target:gsm_t_site = { gsm_gen_sub_food = yes } }
+		AND = { check_variable = { which = gsm_ind value = 4 } event_target:gsm_t_site = { gsm_gen_sub_trade = yes } }
+		AND = { check_variable = { which = gsm_ind value = 5 } event_target:gsm_t_site = { gsm_gen_sub_consumer_goods = yes } }
+		AND = { check_variable = { which = gsm_ind value = 6 } event_target:gsm_t_site = { gsm_gen_sub_alloys = yes } }
+		AND = { check_variable = { which = gsm_ind value = 7 } event_target:gsm_t_site = { gsm_gen_sub_physics_research = yes } }
+		AND = { check_variable = { which = gsm_ind value = 8 } event_target:gsm_t_site = { gsm_gen_sub_society_research = yes } }
+		AND = { check_variable = { which = gsm_ind value = 9 } event_target:gsm_t_site = { gsm_gen_sub_engineering_research = yes } }
+		AND = { check_variable = { which = gsm_ind value = 10 } event_target:gsm_t_site = { gsm_gen_sub_unity = yes } }
+		AND = { check_variable = { which = gsm_ind value = 11 } event_target:gsm_t_site = { gsm_gen_sub_influence = yes } }
+		AND = { check_variable = { which = gsm_ind value = 12 } event_target:gsm_t_site = { gsm_gen_sub_media = yes } }
+		AND = { check_variable = { which = gsm_ind value = 13 } event_target:gsm_t_site = { gsm_gen_sub_healthcare = yes } }
+		AND = { check_variable = { which = gsm_ind value = 14 } event_target:gsm_t_site = { gsm_gen_sub_construction = yes } }
+		AND = { check_variable = { which = gsm_ind value = 15 } event_target:gsm_t_site = { gsm_gen_sub_military = yes } }
+		AND = { check_variable = { which = gsm_ind value = 16 } event_target:gsm_t_site = { gsm_gen_sub_security = yes } }
+	}
+}
+gsm_gen_ind_restricted_here = {
+	exists = owner
+	owner = { gsm_can_steer_investment = yes }
+	OR = {
+		AND = { has_planet_flag = gsm_nr_energy event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_energy } }
+		AND = { has_planet_flag = gsm_nr_minerals event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_minerals } }
+		AND = { has_planet_flag = gsm_nr_food event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_food } }
+		AND = { has_planet_flag = gsm_nr_trade event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_trade } }
+		AND = { has_planet_flag = gsm_nr_consumer_goods event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_consumer_goods } }
+		AND = { has_planet_flag = gsm_nr_alloys event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_alloys } }
+		AND = { has_planet_flag = gsm_nr_physics_research event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_physics_research } }
+		AND = { has_planet_flag = gsm_nr_society_research event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_society_research } }
+		AND = { has_planet_flag = gsm_nr_engineering_research event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_engineering_research } }
+		AND = { has_planet_flag = gsm_nr_unity event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_unity } }
+		AND = { has_planet_flag = gsm_nr_influence event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_influence } }
+		AND = { has_planet_flag = gsm_nr_media event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_media } }
+		AND = { has_planet_flag = gsm_nr_healthcare event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_healthcare } }
+		AND = { has_planet_flag = gsm_nr_construction event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_construction } }
+		AND = { has_planet_flag = gsm_nr_military event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_military } }
+		AND = { has_planet_flag = gsm_nr_security event_target:gsm_t_inv_co = { has_country_flag = gsm_ind_security } }
+	}
+}
+gsm_gen_wz_ind_restricted_here = {
+	exists = owner
+	owner = { gsm_can_steer_investment = yes }
+	OR = {
+		AND = { has_planet_flag = gsm_nr_energy prev = { check_variable = { which = gsm_wz_ind value = 1 } } }
+		AND = { has_planet_flag = gsm_nr_minerals prev = { check_variable = { which = gsm_wz_ind value = 2 } } }
+		AND = { has_planet_flag = gsm_nr_food prev = { check_variable = { which = gsm_wz_ind value = 3 } } }
+		AND = { has_planet_flag = gsm_nr_trade prev = { check_variable = { which = gsm_wz_ind value = 4 } } }
+		AND = { has_planet_flag = gsm_nr_consumer_goods prev = { check_variable = { which = gsm_wz_ind value = 5 } } }
+		AND = { has_planet_flag = gsm_nr_alloys prev = { check_variable = { which = gsm_wz_ind value = 6 } } }
+		AND = { has_planet_flag = gsm_nr_physics_research prev = { check_variable = { which = gsm_wz_ind value = 7 } } }
+		AND = { has_planet_flag = gsm_nr_society_research prev = { check_variable = { which = gsm_wz_ind value = 8 } } }
+		AND = { has_planet_flag = gsm_nr_engineering_research prev = { check_variable = { which = gsm_wz_ind value = 9 } } }
+		AND = { has_planet_flag = gsm_nr_unity prev = { check_variable = { which = gsm_wz_ind value = 10 } } }
+		AND = { has_planet_flag = gsm_nr_influence prev = { check_variable = { which = gsm_wz_ind value = 11 } } }
+		AND = { has_planet_flag = gsm_nr_media prev = { check_variable = { which = gsm_wz_ind value = 12 } } }
+		AND = { has_planet_flag = gsm_nr_healthcare prev = { check_variable = { which = gsm_wz_ind value = 13 } } }
+		AND = { has_planet_flag = gsm_nr_construction prev = { check_variable = { which = gsm_wz_ind value = 14 } } }
+		AND = { has_planet_flag = gsm_nr_military prev = { check_variable = { which = gsm_wz_ind value = 15 } } }
+		AND = { has_planet_flag = gsm_nr_security prev = { check_variable = { which = gsm_wz_ind value = 16 } } }
+	}
+}
+gsm_gen_ind_unit_ok = {
+	OR = {
+		AND = { check_variable = { which = gsm_wz_ind value = 1 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_energy } }
+		AND = { check_variable = { which = gsm_wz_ind value = 2 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_minerals } }
+		AND = { check_variable = { which = gsm_wz_ind value = 3 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_food } }
+		AND = { check_variable = { which = gsm_wz_ind value = 4 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_trade } }
+		AND = { check_variable = { which = gsm_wz_ind value = 5 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_consumer_goods } }
+		AND = { check_variable = { which = gsm_wz_ind value = 6 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_alloys } }
+		AND = { check_variable = { which = gsm_wz_ind value = 7 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_physics_research } }
+		AND = { check_variable = { which = gsm_wz_ind value = 8 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_society_research } }
+		AND = { check_variable = { which = gsm_wz_ind value = 9 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_engineering_research } }
+		AND = { check_variable = { which = gsm_wz_ind value = 10 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_unity } }
+		AND = { check_variable = { which = gsm_wz_ind value = 11 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_influence } }
+		AND = { check_variable = { which = gsm_wz_ind value = 12 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_media } }
+		AND = { check_variable = { which = gsm_wz_ind value = 13 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_healthcare } }
+		AND = { check_variable = { which = gsm_wz_ind value = 14 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_construction } }
+		AND = { check_variable = { which = gsm_wz_ind value = 15 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_military } }
+		AND = { check_variable = { which = gsm_wz_ind value = 16 } check_variable_arithmetic = { which = gsm_t_cap_total multiply = @gsm_found_asset_share value >= @gsm_unitk_security } }
+	}
+}

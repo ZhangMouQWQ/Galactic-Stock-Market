@@ -1,0 +1,72 @@
+gsm_market_sit = {
+	picture = GFX_evt_galactic_market
+	category = neutral
+	permanent = yes
+	situation_log_category = developments
+	progress_direction = bidirectional
+	complete_category = positive
+	fail_category = negative
+	complete_icon_frame = GFX_situation_outcome_frame_blue
+	complete_icon = GFX_situation_outcome_unknown
+	fail_icon_frame = GFX_situation_outcome_frame_blue
+	fail_icon = GFX_situation_outcome_unknown
+	start_value = 0
+	initial_progress = 100
+	potential = {
+		gsm_is_market_country = yes
+	}
+	on_start = {
+		gsm_sit_progress = yes
+	}
+	on_fail = {
+		custom_tooltip = gsm_market_sit_end_tt
+		hidden_effect = { }
+	}
+	on_progress_complete = {
+		custom_tooltip = gsm_market_sit_end_tt
+		hidden_effect = { }
+	}
+	monthly_progress = {
+		base = 0
+	}
+	stages = {
+		gsm_sit_st_low = {
+			icon = GFX_situation_stage_1
+			icon_background = GFX_situation_stage_frame_blue
+			end = 94
+		}
+		gsm_sit_st_mid = {
+			icon = GFX_situation_stage_2
+			icon_background = GFX_situation_stage_frame_yellow
+			end = 106
+		}
+		gsm_sit_st_high = {
+			icon = GFX_situation_stage_3
+			icon_background = GFX_situation_stage_frame_orange
+			end = 200
+		}
+	}
+	approach = {
+		name = gsm_sit_ap_watch
+		icon = GFX_situation_approach_this_is_fine
+		icon_background = GFX_situation_approach_bg_yellow
+		default = yes
+		on_select = {
+			custom_tooltip = gsm_sit_ap_watch_tt
+		}
+		ai_weight = { base = 1 }
+	}
+	approach = {
+		name = gsm_sit_ap_term
+		icon = GFX_situation_approach_balance_sheet
+		icon_background = GFX_situation_approach_bg_green
+		on_select = {
+			custom_tooltip = gsm_sit_ap_term_tt
+			hidden_effect = {
+				owner = { country_event = { id = gsm_ui.900 } }
+				set_situation_approach = gsm_sit_ap_watch
+			}
+		}
+		ai_weight = { base = 0 }
+	}
+}

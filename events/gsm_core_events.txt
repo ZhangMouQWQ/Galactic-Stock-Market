@@ -1,0 +1,377 @@
+namespace = gsm_core
+event = {
+	id = gsm_core.1
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_ensure_exchange = yes
+		event_target:gsm_exchange = {
+			gsm_ensure_viewer_contact = yes
+			gsm_ensure_trade_vault = yes
+		}
+	}
+}
+event = {
+	id = gsm_core.49
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		every_country = {
+			limit = {
+				is_country_type = default
+				is_ai = yes
+				OR = {
+					has_policy_flag = gsm_tax_low
+					has_policy_flag = gsm_tax_high
+					has_policy_flag = gsm_fc_open
+					has_policy_flag = gsm_fc_closed
+					has_policy_flag = gsm_ir_laissez_faire
+					has_policy_flag = gsm_ir_directed
+					has_policy_flag = gsm_sub_public
+					has_policy_flag = gsm_sub_all
+					has_policy_flag = gsm_stx_std
+					has_policy_flag = gsm_stx_high
+					has_policy_flag = gsm_dout_on
+					has_policy_flag = gsm_ofdi_limited
+					has_policy_flag = gsm_ofdi_forbidden
+				}
+			}
+			if = {
+				limit = { OR = { has_policy_flag = gsm_tax_low has_policy_flag = gsm_tax_high } }
+				set_policy = { policy = gsm_policy_corporate_tax option = gsm_tax_standard cooldown = no }
+			}
+			if = {
+				limit = { OR = { has_policy_flag = gsm_fc_open has_policy_flag = gsm_fc_closed } }
+				set_policy = { policy = gsm_policy_foreign_capital option = gsm_fc_restricted cooldown = no }
+			}
+			if = {
+				limit = { OR = { has_policy_flag = gsm_ir_laissez_faire has_policy_flag = gsm_ir_directed } }
+				set_policy = { policy = gsm_policy_investment_regime option = gsm_ir_guided cooldown = no }
+			}
+			if = {
+				limit = { OR = { has_policy_flag = gsm_sub_public has_policy_flag = gsm_sub_all } }
+				set_policy = { policy = gsm_policy_subsidies option = gsm_sub_none cooldown = no }
+			}
+			if = {
+				limit = { OR = { has_policy_flag = gsm_stx_std has_policy_flag = gsm_stx_high } }
+				set_policy = { policy = gsm_policy_securities_tax option = gsm_stx_none cooldown = no }
+			}
+			if = {
+				limit = { has_policy_flag = gsm_dout_on }
+				set_policy = { policy = gsm_policy_defense_outsourcing option = gsm_dout_off cooldown = no }
+			}
+			if = {
+				limit = { OR = { has_policy_flag = gsm_ofdi_limited has_policy_flag = gsm_ofdi_forbidden } }
+				set_policy = { policy = gsm_policy_outward_fdi option = gsm_ofdi_regime cooldown = no }
+			}
+			if = {
+				limit = { has_global_flag = gsm_debug_log }
+				log = "GALMARKET: start policies reset to the defaults for [This.GetName]"
+			}
+		}
+	}
+}
+country_event = {
+	id = gsm_core.20
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = {
+		gsm_has_iid = yes
+	}
+	immediate = {
+		if = {
+			limit = { is_variable_set = gsm_cfd_owed }
+			clear_variable = gsm_cfd_owed
+		}
+		remove_country_flag = gsm_cfd_owes
+		gsm_gen_cfd_rec_clear_all = yes
+		every_country = {
+			limit = { gsm_is_security = yes }
+			set_variable = { which = gsm_t_iid value = prev.gsm_iid }
+			gsm_gen_hold_release = yes
+			gsm_gen_cfd_clear = yes
+			if = {
+				limit = { is_variable_set = gsm_debt_iid check_variable = { which = gsm_debt_iid value = gsm_t_iid } }
+				gsm_bond_lender_lost = yes
+			}
+		}
+	}
+}
+event = {
+	id = gsm_core.100
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_ensure_exchange = yes
+		event_target:gsm_exchange = {
+			gsm_monthly_tick = yes
+		}
+	}
+}
+carrier_event = {
+	id = gsm_core.30
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		colony = {
+			gsm_ppool_refund_all = yes
+			if = {
+				limit = { exists = fromfrom }
+				fromfrom = { save_event_target_as = gsm_t_rbc }
+			}
+			else_if = {
+				limit = { exists = owner }
+				owner = { save_event_target_as = gsm_t_rbc }
+			}
+			gsm_gen_rb_colony_drop = yes
+			gsm_gen_colony_reset = yes
+			if = {
+				limit = { NOT = { exists = fromfrom } }
+				gsm_nci_apply = yes
+			}
+			if = {
+				limit = { has_planet_flag = gsm_has_assets }
+				colony_event = { id = gsm_core.31 days = 1 }
+			}
+		}
+	}
+}
+colony_event = {
+	id = gsm_core.31
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = {
+		has_planet_flag = gsm_has_assets
+		exists = event_target:gsm_exchange
+	}
+	immediate = {
+		gsm_gen_branch_heal = yes
+	}
+}
+carrier_event = {
+	id = gsm_core.32
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_ppool_refund_all = yes
+		if = {
+			limit = { exists = owner }
+			owner = { save_event_target_as = gsm_t_rbc }
+		}
+		gsm_gen_rb_colony_drop = yes
+		gsm_gen_colony_reset = yes
+		if = { limit = { is_variable_set = gsm_hkbl } clear_variable = gsm_hkbl }
+		if = { limit = { is_variable_set = gsm_hkbw } clear_variable = gsm_hkbw }
+		if = { limit = { is_variable_set = gsm_rbpm } clear_variable = gsm_rbpm }
+		if = { limit = { is_variable_set = gsm_rbp_construction } clear_variable = gsm_rbp_construction }
+		if = {
+			limit = { OR = { has_planet_flag = gsm_has_assets is_variable_set = gsm_a_n } }
+			save_event_target_as = gsm_t_cdp
+			every_country = {
+				limit = { gsm_is_live_company = yes event_target:gsm_t_cdp = { has_planet_flag = gsm_site_of@prev } }
+				event_target:gsm_t_cdp = {
+					set_variable = { which = gsm_t_s value = prev.gsm_slot }
+					gsm_gen_asset_read = yes
+				}
+				set_variable = { which = gsm_t_wk value = event_target:gsm_t_cdp.gsm_t_rk }
+				subtract_variable = { which = gsm_k value = gsm_t_wk }
+				gsm_clamp_min = { VAR = gsm_k MIN = 0 }
+				if = {
+					limit = { has_global_flag = gsm_debug_log }
+					log = "GALMARKET_ASSET: [This.GetRealName] lost its branch on [gsm_t_cdp.GetName] with the colony, capital [This.gsm_t_wk] written off"
+				}
+			}
+			gsm_gen_planet_clear_all = yes
+		}
+	}
+}
+carrier_event = {
+	id = gsm_core.33
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_ppool_refund_all = yes
+		gsm_gen_rb_colony_drop = yes
+		gsm_gen_colony_reset = yes
+		if = { limit = { is_variable_set = gsm_hkbl } clear_variable = gsm_hkbl }
+		if = { limit = { is_variable_set = gsm_hkbw } clear_variable = gsm_hkbw }
+		if = { limit = { is_variable_set = gsm_rbpm } clear_variable = gsm_rbpm }
+		if = { limit = { is_variable_set = gsm_rbp_construction } clear_variable = gsm_rbp_construction }
+		if = {
+			limit = { OR = { has_planet_flag = gsm_has_assets is_variable_set = gsm_a_n } }
+			gsm_gen_planet_clear_all = yes
+		}
+	}
+}
+carrier_event = {
+	id = gsm_core.34
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		colony = {
+			gsm_nci_apply = yes
+		}
+	}
+}
+country_event = {
+	id = gsm_core.40
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		every_playable_country = {
+			every_owned_colony = { gsm_gen_clear_v3_memo = yes }
+		}
+		set_variable = { which = gsm_version value = 4 }
+	}
+}
+country_event = {
+	id = gsm_core.41
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		every_playable_country = {
+			every_owned_colony = {
+				limit = { is_variable_set = gsm_cus_trade }
+				set_variable = { which = gsm_cus_trade value = -100 }
+			}
+		}
+		set_variable = { which = gsm_version value = 5 }
+	}
+}
+country_event = {
+	id = gsm_core.42
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_gen_slots_acc_migrate_6 = yes
+		every_country = {
+			limit = { has_country_flag = gsm_subsidised }
+			remove_country_flag = gsm_subsidised
+		}
+		set_variable = { which = gsm_version value = 6 }
+	}
+}
+country_event = {
+	id = gsm_core.43
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_default = { VAR = gsm_hk_m0 VALUE = gsm_month }
+		every_country = {
+			limit = { gsm_is_security = yes }
+			gsm_company_migrate_7 = yes
+		}
+		every_playable_country = {
+			gsm_gen_country_migrate_7 = yes
+			every_owned_colony = { gsm_gen_colony_migrate_7 = yes }
+		}
+		set_variable = { which = gsm_version value = 7 }
+	}
+}
+country_event = {
+	id = gsm_core.44
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		every_playable_country = {
+			country_event = { id = gsm_core.45 }
+			gsm_gen_country_migrate_8 = yes
+			every_owned_colony = { gsm_gen_colony_migrate_8 = yes }
+		}
+		every_playable_country = {
+			limit = { gsm_is_market_country = yes }
+			country_event = { id = gsm_fn.23 }
+		}
+		set_variable = { which = gsm_version value = 8 }
+	}
+}
+country_event = {
+	id = gsm_core.46
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_gen_rk_alive_reset = yes
+		every_country = {
+			limit = { gsm_is_live_company = yes NOT = { has_country_flag = gsm_neutral } }
+			gsm_gen_rk_alive_add = yes
+		}
+		gsm_gen_rk_m = yes
+		country_event = { id = gsm_fn.59 }
+		set_variable = { which = gsm_version value = 9 }
+	}
+}
+country_event = {
+	id = gsm_core.47
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		every_playable_country = {
+			every_owned_colony = { gsm_gen_colony_migrate_10 = yes }
+		}
+		set_variable = { which = gsm_version value = 10 }
+	}
+}
+country_event = {
+	id = gsm_core.48
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		if = { limit = { is_variable_set = gsm_px_growth_d } clear_variable = gsm_px_growth_d }
+		if = { limit = { is_variable_set = gsm_px_v_labour } clear_variable = gsm_px_v_labour }
+		if = { limit = { is_variable_set = gsm_t_vl } clear_variable = gsm_t_vl }
+		if = { limit = { is_variable_set = gsm_t_vlq } clear_variable = gsm_t_vlq }
+		every_playable_country = {
+			every_owned_colony = { gsm_gen_colony_migrate_11 = yes }
+		}
+		set_variable = { which = gsm_version value = 11 }
+	}
+}
+country_event = {
+	id = gsm_core.50
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		every_playable_country = {
+			every_owned_colony = { gsm_gen_colony_migrate_12 = yes }
+		}
+		set_variable = { which = gsm_version value = 12 }
+	}
+}
+country_event = {
+	id = gsm_core.51
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		every_playable_country = {
+			limit = {
+				OR = {
+					is_ai = no
+					has_modifier = gsm_trade_vault
+				}
+				NOT = { has_country_flag = gsm_was_human }
+			}
+			set_country_flag = gsm_was_human
+		}
+		set_variable = { which = gsm_version value = 13 }
+	}
+}
+country_event = {
+	id = gsm_core.52
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		every_playable_country = {
+			every_owned_colony = { gsm_gen_colony_migrate_14 = yes }
+		}
+		gsm_gen_slots_acc_migrate_14 = yes
+		set_variable = { which = gsm_version value = 14 }
+	}
+}
+country_event = {
+	id = gsm_core.45
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		gsm_gen_old_targets_clear = yes
+	}
+}

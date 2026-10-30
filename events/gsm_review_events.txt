@@ -1,0 +1,47 @@
+namespace = gsm_review
+country_event = {
+	id = gsm_review.1
+	title = gsm_review.1.name
+	desc = gsm_review.1.desc
+	picture = GFX_evt_board_meeting
+	show_sound = event_administrative_work
+	is_triggered_only = yes
+	trigger = {
+		exists = from
+		exists = fromfrom
+	}
+	option = {
+		name = gsm_review.1.a
+		default_hide_option = yes
+		ai_chance = { factor = 1 }
+		hidden_effect = {
+			from = { save_event_target_as = gsm_t_frc }
+			fromfrom = { save_event_target_as = gsm_t_frpl }
+			event_target:gsm_t_frpl = {
+				if = {
+					limit = { has_planet_flag = gsm_fdi_pend@event_target:gsm_t_frc }
+					remove_planet_flag = gsm_fdi_pend@event_target:gsm_t_frc
+				}
+			}
+		}
+	}
+	option = {
+		name = gsm_review.1.b
+		ai_chance = { factor = 0 }
+		hidden_effect = {
+			from = { save_event_target_as = gsm_t_frc }
+			fromfrom = { save_event_target_as = gsm_t_frpl }
+			event_target:gsm_t_frpl = {
+				if = {
+					limit = { has_planet_flag = gsm_fdi_pend@event_target:gsm_t_frc }
+					remove_planet_flag = gsm_fdi_pend@event_target:gsm_t_frc
+				}
+				if = {
+					limit = { has_planet_flag = gsm_fdi_asked@event_target:gsm_t_frc }
+					remove_planet_flag = gsm_fdi_asked@event_target:gsm_t_frc
+				}
+				event_target:gsm_t_frc = { event_target:gsm_t_frpl = { set_timed_planet_flag = { flag = gsm_fdi_no@prev days = 1800 } } }
+			}
+		}
+	}
+}

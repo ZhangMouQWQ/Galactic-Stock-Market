@@ -1,0 +1,97 @@
+decision_gsm_open_terminal = {
+	owned_planets_only = yes
+	sound = event_administrative_work
+	icon = decision_deal
+	potential = {
+		exists = owner
+		is_capital = yes
+		owner = {
+			is_ai = no
+			gsm_is_market_country = yes
+		}
+	}
+	effect = {
+		owner = {
+			country_event = { id = gsm_ui.900 }
+		}
+	}
+	ai_weight = { weight = 0 }
+}
+decision_gsm_encourage_investment = {
+	owned_planets_only = yes
+	sound = event_administrative_work
+	icon = decision_deal
+	potential = {
+		exists = owner
+		owner = { gsm_is_market_country = yes }
+		NOT = { has_planet_flag = gsm_invest_encouraged }
+		NOT = { gsm_planet_class_barred = yes }
+	}
+	effect = {
+		custom_tooltip = decision_gsm_encourage_investment_effect
+		hidden_effect = {
+			set_planet_flag = gsm_invest_encouraged
+			remove_planet_flag = gsm_invest_restricted
+		}
+	}
+	ai_weight = { weight = 0 }
+}
+decision_gsm_restrict_investment = {
+	owned_planets_only = yes
+	sound = event_administrative_work
+	icon = decision_deal
+	potential = {
+		exists = owner
+		owner = { gsm_is_market_country = yes }
+		NOT = { has_planet_flag = gsm_invest_restricted }
+		NOT = { gsm_planet_class_barred = yes }
+	}
+	effect = {
+		custom_tooltip = decision_gsm_restrict_investment_effect
+		hidden_effect = {
+			set_planet_flag = gsm_invest_restricted
+			remove_planet_flag = gsm_invest_encouraged
+		}
+	}
+	ai_weight = { weight = 0 }
+}
+decision_gsm_neutral_investment = {
+	owned_planets_only = yes
+	sound = event_administrative_work
+	icon = decision_deal
+	potential = {
+		exists = owner
+		OR = {
+			has_planet_flag = gsm_invest_restricted
+			has_planet_flag = gsm_invest_encouraged
+		}
+	}
+	effect = {
+		custom_tooltip = decision_gsm_neutral_investment_effect
+		hidden_effect = {
+			remove_planet_flag = gsm_invest_restricted
+			remove_planet_flag = gsm_invest_encouraged
+		}
+	}
+	ai_weight = { weight = 0 }
+}
+decision_gsm_planet_companies = {
+	owned_planets_only = yes
+	sound = event_administrative_work
+	icon = decision_deal
+	potential = {
+		gsm_planet_companies_entry = yes
+		owner = { is_ai = no }
+	}
+	effect = {
+		custom_tooltip = decision_gsm_planet_companies_effect
+		hidden_effect = {
+			owner = {
+				prev = { save_global_event_target_as = gsm_ui_planet@prev }
+				set_variable = { which = gsm_ui_page value = 0 }
+				country_event = { id = gsm_ui.30 }
+			}
+		}
+	}
+	ai_weight = { weight = 0 }
+}

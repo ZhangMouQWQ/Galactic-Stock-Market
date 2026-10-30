@@ -1,0 +1,7 @@
+spriteTypes = {
+	spriteType = { name = "GFX_gsm_launcher_icon" texturefile = "gfx/interface/gsm/gsm_launcher.dds" }
+	spriteType = { name = "GFX_gsm_launcher_badge" texturefile = "gfx/interface/gsm/gsm_launcher_badge.dds" }
+	spriteType = { name = "GFX_gsm_launcher_hide" texturefile = "gfx/interface/gsm/gsm_launcher_hide.dds" }
+	spriteType = { name = "GFX_gsm_launcher_show" texturefile = "gfx/interface/gsm/gsm_launcher_show.dds" }
+	spriteType = { name = "GFX_gsm_launcher_bg" texturefile = "gfx/interface/gsm/gsm_launcher_bg.dds" }
+}

@@ -1,0 +1,6 @@
+gsm_debug_found_test = {
+	country_event = { id = gsm_debug.20 }
+}
+gsm_debug_validate = {
+	country_event = { id = gsm_fn.15 }
+}

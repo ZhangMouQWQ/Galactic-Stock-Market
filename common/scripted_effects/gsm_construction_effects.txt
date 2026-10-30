@@ -1,0 +1,42 @@
+gsm_cp_base_capacity = {
+	export_modifier_to_variable = { modifier = planet_building_capacity_add variable = gsm_t_cqm }
+	set_variable = { which = gsm_t_cqc value = @gsm_cp_base_queue }
+	change_variable = { which = gsm_t_cqc value = gsm_t_cqm }
+}
+gsm_cp_speed_mods = {
+	export_modifier_to_variable = { modifier = planet_building_build_speed_mult variable = gsm_t_cqv }
+	export_modifier_to_variable = { modifier = building_time_mult variable = gsm_t_cqt }
+}
+gsm_cp_x_calc = {
+	gsm_cp_base_capacity = yes
+	gsm_cp_speed_mods = yes
+	set_variable = { which = gsm_t_cqs value = 0 }
+	set_variable = { which = gsm_t_cqb value = 0 }
+	carrier = {
+		set_variable = { which = gsm_t_cqs value = value:gsm_cp_sqrtu }
+		set_variable = { which = gsm_t_cqb value = value:gsm_cp_qbonus }
+	}
+	set_variable = { which = gsm_t_cpn value = gsm_t_cqc }
+	change_variable = { which = gsm_t_cpn value = gsm_t_cqb }
+	set_variable = { which = gsm_t_cqdv value = gsm_t_cpn }
+	modulo_variable = { which = gsm_t_cqdv value = 1 }
+	subtract_variable = { which = gsm_t_cpn value = gsm_t_cqdv }
+	if = { limit = { check_variable = { which = gsm_t_cpn value < 1 } } set_variable = { which = gsm_t_cpn value = 1 } }
+	if = { limit = { check_variable = { which = gsm_t_cpn value > @gsm_cp_n_max } } set_variable = { which = gsm_t_cpn value = @gsm_cp_n_max } }
+	set_variable = { which = gsm_t_cqdv value = gsm_t_cqs }
+	multiply_variable = { which = gsm_t_cqdv value = @gsm_cp_speed }
+	change_variable = { which = gsm_t_cqdv value = gsm_t_cqv }
+	change_variable = { which = gsm_t_cqdv value = 1 }
+	if = { limit = { check_variable = { which = gsm_t_cqdv value < 0.1 } } set_variable = { which = gsm_t_cqdv value = 0.1 } }
+	set_variable = { which = gsm_t_cpd value = gsm_t_cqt }
+	change_variable = { which = gsm_t_cpd value = 1 }
+	multiply_variable = { which = gsm_t_cpd value = @gsm_cp_months }
+	divide_variable = { which = gsm_t_cpd value = gsm_t_cqdv }
+	if = { limit = { check_variable = { which = gsm_t_cpd value < @gsm_cp_d_min } } set_variable = { which = gsm_t_cpd value = @gsm_cp_d_min } }
+	if = { limit = { check_variable = { which = gsm_t_cpd value > @gsm_cp_d_max } } set_variable = { which = gsm_t_cpd value = @gsm_cp_d_max } }
+	set_variable = { which = gsm_t_cpx value = gsm_t_cpn }
+	multiply_variable = { which = gsm_t_cpx value = @gsm_cp_x_scale }
+	divide_variable = { which = gsm_t_cpx value = gsm_t_cpd }
+	round_variable_to_closest = { which = gsm_t_cpx value = 1 }
+	if = { limit = { check_variable = { which = gsm_t_cpx value < 1 } } set_variable = { which = gsm_t_cpx value = 1 } }
+}

@@ -1,0 +1,180 @@
+namespace = gsm_merger
+country_event = {
+	id = gsm_merger.1
+	title = gsm_merger.1.name
+	desc = gsm_merger.1.desc
+	picture = GFX_evt_board_meeting
+	show_sound = event_administrative_work
+	is_triggered_only = yes
+	trigger = {
+		exists = from
+		from = { has_country_flag = gsm_off_pending }
+	}
+	immediate = {
+		from = {
+			set_variable = { which = gsm_d_off_ps value = gsm_off_ps }
+			round_variable_to_closest = { which = gsm_d_off_ps value = 0.01 }
+		}
+	}
+	option = {
+		name = gsm_merger.1.a
+		ai_chance = { factor = 0 }
+		trigger = {
+			from = {
+				has_country_flag = gsm_off_pending
+				gsm_is_live_company = yes
+				exists = event_target:gsm_off_a@this
+				event_target:gsm_off_a@this = {
+					gsm_is_live_company = yes
+					OR = { NOT = { exists = fromfrom } is_same_value = fromfrom }
+				}
+			}
+		}
+		hidden_effect = {
+			if = {
+				limit = { has_global_flag = gsm_debug_log }
+				if = {
+					limit = { is_ai = yes }
+					log = "GALMARKET_COMPANY: takeover window for [From.GetRealName]: option accept by [Root.GetName], is_ai yes"
+				}
+				else = {
+					log = "GALMARKET_COMPANY: takeover window for [From.GetRealName]: option accept by [Root.GetName], is_ai no"
+				}
+			}
+			from = {
+				if = {
+					limit = {
+						has_country_flag = gsm_off_pending
+						gsm_is_live_company = yes
+						exists = event_target:gsm_off_a@this
+						event_target:gsm_off_a@this = { OR = { NOT = { exists = fromfrom } is_same_value = fromfrom } }
+					}
+					set_variable = { which = gsm_t_mprem value = gsm_off_prem }
+					set_variable = { which = gsm_t_mpay value = gsm_off_pay }
+					event_target:gsm_off_a@this = { save_event_target_as = gsm_t_acq }
+					root = { save_event_target_as = gsm_t_macc }
+					country_event = { id = gsm_merger.4 }
+				}
+			}
+		}
+	}
+	option = {
+		name = gsm_merger.1.b
+		default_hide_option = yes
+		ai_chance = { factor = 1 }
+		hidden_effect = {
+			if = {
+				limit = { has_global_flag = gsm_debug_log }
+				log = "GALMARKET_COMPANY: takeover window for [From.GetRealName]: option reject by [Root.GetName]"
+			}
+			from = {
+				if = {
+					limit = {
+						has_country_flag = gsm_off_pending
+						OR = {
+							NOT = { exists = fromfrom }
+							NOT = { exists = event_target:gsm_off_a@this }
+							event_target:gsm_off_a@this = { is_same_value = fromfrom }
+						}
+					}
+					remove_country_flag = gsm_off_pending
+					set_variable = { which = gsm_off_last value = 2 }
+					country_event = { id = gsm_merger.5 }
+				}
+			}
+		}
+	}
+}
+country_event = {
+	id = gsm_merger.3
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		if = {
+			limit = {
+				has_country_flag = gsm_off_pending
+				OR = {
+					NOT = { exists = from }
+					NOT = { exists = event_target:gsm_off_a@this }
+					event_target:gsm_off_a@this = { is_same_value = from }
+				}
+			}
+			set_variable = { which = gsm_t_x value = event_target:gsm_exchange.gsm_month }
+			subtract_variable = { which = gsm_t_x value = gsm_off_m }
+			if = {
+				limit = { check_variable = { which = gsm_t_x value >= 1 } }
+				remove_country_flag = gsm_off_pending
+				set_variable = { which = gsm_off_last value = 3 }
+				country_event = { id = gsm_merger.5 }
+			}
+		}
+	}
+}
+country_event = {
+	id = gsm_merger.4
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = { which = gsm_t_mdone value = 0 }
+		set_variable = { which = gsm_t_macc_ok value = 0 }
+		gsm_company_controller = yes
+		if = {
+			limit = {
+				check_variable = { which = gsm_t_has_ctl value = 1 }
+				event_target:gsm_t_ctl = { is_same_value = event_target:gsm_t_macc }
+				exists = event_target:gsm_off_by@this
+			}
+			event_target:gsm_off_by@this = { save_event_target_as = gsm_t_mby }
+			event_target:gsm_t_acq = { gsm_company_controller = yes }
+			if = {
+				limit = {
+					event_target:gsm_t_acq = { check_variable = { which = gsm_t_has_ctl value = 1 } }
+					event_target:gsm_t_ctl = { is_same_value = event_target:gsm_t_mby }
+				}
+				remove_country_flag = gsm_off_pending
+				gsm_merger_quote = yes
+				if = {
+					limit = { check_variable = { which = gsm_t_mq_ok value = 0 } }
+					set_variable = { which = gsm_t_macc_ok value = 2 }
+				}
+				else_if = {
+					limit = { check_variable = { which = gsm_t_mps value >= gsm_off_ps } }
+					set_variable = { which = gsm_t_macc_ok value = 1 }
+				}
+			}
+		}
+		if = {
+			limit = { check_variable = { which = gsm_t_macc_ok value = 1 } }
+			gsm_merger_exec = yes
+		}
+		if = {
+			limit = { check_variable = { which = gsm_t_mdone value = 1 } }
+			set_variable = { which = gsm_off_last value = 0 }
+		}
+		else = {
+			remove_country_flag = gsm_off_pending
+			set_variable = { which = gsm_off_last value = 3 }
+			if = {
+				limit = { NOT = { check_variable = { which = gsm_t_macc_ok value = 0 } } }
+				set_variable = { which = gsm_off_last value = 2 }
+			}
+		}
+		if = {
+			limit = { has_global_flag = gsm_debug_log }
+			log = "GALMARKET_COMPANY: takeover offer for [This.GetRealName] accepted: result [This.gsm_t_mdone] check [This.gsm_t_macc_ok]"
+		}
+	}
+}
+country_event = {
+	id = gsm_merger.5
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		if = {
+			limit = { exists = event_target:gsm_off_a@this }
+			save_event_target_as = gsm_t_mrj
+			event_target:gsm_off_a@this = { save_event_target_as = gsm_t_mrja }
+			event_target:gsm_t_mrja = { event_target:gsm_t_mrj = { set_timed_country_flag = { flag = gsm_ma_no@prev days = 400 } } }
+		}
+	}
+}

@@ -1,0 +1,9 @@
+gsm_opinion_expropriated = {
+	opinion = {
+		base = -60
+	}
+	min = -200
+	decay = {
+		base = 1
+	}
+}

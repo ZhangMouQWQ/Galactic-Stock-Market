@@ -1,0 +1,375 @@
+defined_text = {
+	name = GetGsmStatus
+	random = no
+	text = {
+		localization_key = GSM_STATUS_DEFUNCT
+		trigger = { has_country_flag = gsm_defunct }
+	}
+	text = {
+		localization_key = GSM_STATUS_DISTRESS
+		trigger = { has_country_flag = gsm_distress }
+	}
+	text = {
+		localization_key = GSM_STATUS_RECOVERY
+		trigger = { is_variable_set = gsm_rs check_variable = { which = gsm_rs value = 2 } }
+	}
+	text = {
+		localization_key = GSM_STATUS_NEUTRAL
+		trigger = { has_country_flag = gsm_neutral }
+	}
+	text = {
+		localization_key = GSM_STATUS_LISTED
+		trigger = { is_country_type = gsm_group has_country_flag = gsm_listed }
+	}
+	text = {
+		localization_key = GSM_STATUS_PRIVATE
+		trigger = { is_country_type = gsm_group }
+	}
+	text = {
+		localization_key = GSM_STATUS_SHELL
+		trigger = { check_variable = { which = gsm_k value < 1 } }
+	}
+	text = {
+		localization_key = GSM_STATUS_DELIST
+		trigger = {
+			has_country_flag = gsm_st
+			has_country_flag = gsm_listed
+			check_variable = { which = gsm_wind_m value >= @gsm_st_final }
+		}
+	}
+	text = {
+		localization_key = GSM_STATUS_ST
+		trigger = { has_country_flag = gsm_st has_country_flag = gsm_listed }
+	}
+	text = {
+		localization_key = GSM_STATUS_LOSS
+		trigger = { has_country_flag = gsm_st }
+	}
+	text = {
+		localization_key = GSM_STATUS_CSUB
+		trigger = { has_country_flag = gsm_csub }
+	}
+	text = {
+		localization_key = GSM_STATUS_BROOD
+		trigger = { has_country_flag = gsm_style_hive }
+	}
+	text = {
+		localization_key = GSM_STATUS_SUBROUTINE
+		trigger = { has_country_flag = gsm_style_machine }
+	}
+	text = {
+		localization_key = GSM_STATUS_LISTED
+		trigger = { has_country_flag = gsm_listed }
+	}
+	default = GSM_STATUS_PRIVATE
+}
+defined_text = {
+	name = GetGsmStTag
+	random = no
+	text = {
+		localization_key = GSM_PRESS_TAG_WD
+		trigger = { has_country_flag = gsm_press_wd NOT = { has_country_flag = gsm_defunct } }
+	}
+	text = {
+		localization_key = GSM_PRESS_TAG
+		trigger = { has_country_flag = gsm_press NOT = { has_country_flag = gsm_defunct } }
+	}
+	text = {
+		localization_key = GSM_RS_TAG_1
+		trigger = { has_country_flag = gsm_distress }
+	}
+	text = {
+		localization_key = GSM_RS_TAG_2
+		trigger = { is_variable_set = gsm_rs check_variable = { which = gsm_rs value = 2 } }
+	}
+	text = {
+		localization_key = GSM_ST_TAG_DELIST
+		trigger = { has_country_flag = gsm_st has_country_flag = gsm_listed }
+	}
+	text = {
+		localization_key = GSM_ST_TAG_LOSS
+		trigger = { has_country_flag = gsm_st }
+	}
+	text = {
+		localization_key = GSM_DORM_TAG
+		trigger = {
+			check_variable = { which = gsm_k value < 1 }
+			NOT = { has_country_flag = gsm_defunct }
+			NOT = { has_country_flag = gsm_neutral }
+			NOT = { is_country_type = gsm_group }
+		}
+	}
+	default = GSM_EMPTY
+}
+defined_text = {
+	name = GetGsmForm
+	random = no
+	text = {
+		localization_key = GSM_FORM_NEUTRAL
+		trigger = { has_country_flag = gsm_neutral }
+	}
+	text = {
+		localization_key = GSM_FORM_2
+		trigger = { check_variable = { which = gsm_form value = 2 } }
+	}
+	text = {
+		localization_key = GSM_FORM_3
+		trigger = { check_variable = { which = gsm_form value = 3 } }
+	}
+	default = GSM_FORM_1
+}
+defined_text = {
+	name = GetGsmWzForm
+	random = no
+	text = {
+		localization_key = GSM_FORM_MACHINE
+		trigger = { is_machine_empire = yes }
+	}
+	text = {
+		localization_key = GSM_FORM_HIVE
+		trigger = { is_gestalt = yes }
+	}
+	text = {
+		localization_key = GSM_FORM_2
+		trigger = { check_variable = { which = gsm_wz_form value = 2 } }
+	}
+	text = {
+		localization_key = GSM_FORM_3
+		trigger = { check_variable = { which = gsm_wz_form value = 3 } }
+	}
+	default = GSM_FORM_1
+}
+defined_text = {
+	name = GetGsmRegime
+	random = no
+	text = {
+		localization_key = GSM_REGIME_BULL
+		trigger = { check_variable = { which = gsm_regime value = 1 } root = { NOT = { has_country_flag = gsm_ui_green_up } } }
+	}
+	text = {
+		localization_key = GSM_REGIME_BULL_G
+		trigger = { check_variable = { which = gsm_regime value = 1 } }
+	}
+	text = {
+		localization_key = GSM_REGIME_BEAR
+		trigger = { check_variable = { which = gsm_regime value = 3 } root = { NOT = { has_country_flag = gsm_ui_green_up } } }
+	}
+	text = {
+		localization_key = GSM_REGIME_BEAR_G
+		trigger = { check_variable = { which = gsm_regime value = 3 } }
+	}
+	default = GSM_REGIME_NEUTRAL
+}
+defined_text = {
+	name = GetGsmSort
+	random = no
+	text = { localization_key = GSM_SORT_2 trigger = { check_variable = { which = gsm_ui_sort value = 2 } } }
+	text = { localization_key = GSM_SORT_3 trigger = { check_variable = { which = gsm_ui_sort value = 3 } } }
+	text = { localization_key = GSM_SORT_4 trigger = { check_variable = { which = gsm_ui_sort value = 4 } } }
+	default = GSM_SORT_1
+}
+defined_text = {
+	name = GetGsmFilter
+	random = no
+	text = { localization_key = GSM_FILTER_2 trigger = { check_variable = { which = gsm_ui_filter value = 2 } } }
+	text = { localization_key = GSM_FILTER_3 trigger = { check_variable = { which = gsm_ui_filter value = 3 } } }
+	text = { localization_key = GSM_FILTER_4 trigger = { check_variable = { which = gsm_ui_filter value = 4 } } }
+	default = GSM_FILTER_1
+}
+defined_text = {
+	name = GetGsmNewsHint
+	random = no
+	text = {
+		localization_key = GSM_NEWS_HINT
+		trigger = { has_country_flag = gsm_news_unread }
+	}
+	default = GSM_EMPTY
+}
+defined_text = {
+	name = GetGsmCurMissing
+	random = no
+	text = {
+		localization_key = GSM_EMPTY
+		trigger = { check_variable = { which = gsm_ui_has_cur value = 1 } }
+	}
+	default = GSM_CUR_MISSING
+}
+defined_text = {
+	name = GetGsmPolicyTax
+	random = no
+	text = { localization_key = gsm_tax_low trigger = { has_policy_flag = gsm_tax_low } }
+	text = { localization_key = gsm_tax_high trigger = { has_policy_flag = gsm_tax_high } }
+	default = gsm_tax_standard
+}
+defined_text = {
+	name = GetGsmPolicyFc
+	random = no
+	text = { localization_key = gsm_fc_open trigger = { has_policy_flag = gsm_fc_open } }
+	text = { localization_key = gsm_fc_closed trigger = { has_policy_flag = gsm_fc_closed } }
+	default = gsm_fc_restricted
+}
+defined_text = {
+	name = GetGsmPolicyIr
+	random = no
+	text = { localization_key = gsm_ir_laissez_faire trigger = { has_policy_flag = gsm_ir_laissez_faire } }
+	text = { localization_key = gsm_ir_directed trigger = { has_policy_flag = gsm_ir_directed } }
+	default = gsm_ir_guided
+}
+defined_text = {
+	name = GetGsmPolicyBo
+	random = no
+	text = { localization_key = gsm_bo_never trigger = { has_policy_flag = gsm_bo_never } }
+	text = { localization_key = gsm_bo_always trigger = { has_policy_flag = gsm_bo_always } }
+	default = gsm_bo_case_by_case
+}
+defined_text = {
+	name = GetGsmPolicySub
+	random = no
+	text = { localization_key = gsm_sub_public trigger = { has_policy_flag = gsm_sub_public } }
+	text = { localization_key = gsm_sub_all trigger = { has_policy_flag = gsm_sub_all } }
+	default = gsm_sub_none
+}
+defined_text = {
+	name = GetGsmPolicyFdi
+	random = no
+	text = { localization_key = GSM_FDI_GESTALT trigger = { is_gestalt = yes } }
+	text = { localization_key = gsm_fdi_open trigger = { has_policy_flag = gsm_fdi_open } }
+	text = { localization_key = gsm_fdi_forbidden trigger = { has_policy_flag = gsm_fdi_forbidden } }
+	default = gsm_fdi_pact
+}
+defined_text = {
+	name = GetGsmPolicyDout
+	random = no
+	text = { localization_key = GSM_DOUT_GESTALT trigger = { is_gestalt = yes } }
+	text = { localization_key = gsm_dout_on trigger = { has_policy_flag = gsm_dout_on } }
+	default = gsm_dout_off
+}
+defined_text = {
+	name = GetGsmPolicyStx
+	random = no
+	text = { localization_key = gsm_stx_std trigger = { has_policy_flag = gsm_stx_std } }
+	text = { localization_key = gsm_stx_high trigger = { has_policy_flag = gsm_stx_high } }
+	default = gsm_stx_none
+}
+defined_text = {
+	name = GetGsmPolicyOfdi
+	random = no
+	text = { localization_key = gsm_ofdi_limited trigger = { has_policy_flag = gsm_ofdi_limited } }
+	text = { localization_key = gsm_ofdi_forbidden trigger = { has_policy_flag = gsm_ofdi_forbidden } }
+	default = gsm_ofdi_regime
+}
+defined_text = {
+	name = GetGsmPolicyAt
+	random = no
+	text = { localization_key = gsm_at_lax trigger = { has_policy_flag = gsm_at_lax } }
+	text = { localization_key = gsm_at_strict trigger = { has_policy_flag = gsm_at_strict } }
+	default = gsm_at_standard
+}
+defined_text = {
+	name = GetGsmPolicyIp
+	random = no
+	text = { localization_key = gsm_ip_free trigger = { has_policy_flag = gsm_ip_free } }
+	default = gsm_ip_prudent
+}
+defined_text = {
+	name = GetGsmPolicyNci
+	random = no
+	text = { localization_key = gsm_nci_restrict trigger = { has_policy_flag = gsm_nci_restrict } }
+	default = gsm_nci_open
+}
+defined_text = {
+	name = GetGsmWzStatus
+	random = no
+	text = {
+		localization_key = GSM_WZ_REG_FULL
+		trigger = { check_variable = { which = gsm_ui_wz_reg_full value = 1 } }
+	}
+	text = {
+		localization_key = GSM_WZ_UNIT_LOW
+		trigger = { check_variable = { which = gsm_ui_wz_unit_low value = 1 } }
+	}
+	text = {
+		localization_key = GSM_WZ_LOWLAB
+		trigger = {
+			check_variable = { which = gsm_ui_wz_ok value = 1 }
+			check_variable = { which = gsm_ui_wz_lowlab value = 1 }
+		}
+	}
+	text = {
+		localization_key = GSM_WZ_OK
+		trigger = { check_variable = { which = gsm_ui_wz_ok value = 1 } }
+	}
+	default = GSM_WZ_BLOCKED
+}
+defined_text = {
+	name = GetGsmNewsEmpty
+	random = no
+	text = {
+		localization_key = GSM_NEWS_EMPTY
+		trigger = { check_variable = { which = gsm_ui_news_nv value = 0 } }
+	}
+	default = GSM_EMPTY
+}
+defined_text = {
+	name = GetGsmSitChg1m
+	random = no
+	text = {
+		localization_key = GSM_SIT_C1_Z
+		trigger = { event_target:gsm_exchange = { check_variable = { which = gsm_d_chg1m value = 0 } } }
+	}
+	text = {
+		localization_key = GSM_SIT_C1_UR
+		trigger = { event_target:gsm_exchange = { check_variable = { which = gsm_d_chg1m value >= 0 } } owner = { NOT = { has_country_flag = gsm_ui_green_up } } }
+	}
+	text = {
+		localization_key = GSM_SIT_C1_UG
+		trigger = { event_target:gsm_exchange = { check_variable = { which = gsm_d_chg1m value >= 0 } } }
+	}
+	text = {
+		localization_key = GSM_SIT_C1_DG
+		trigger = { owner = { NOT = { has_country_flag = gsm_ui_green_up } } }
+	}
+	default = GSM_SIT_C1_DR
+}
+defined_text = {
+	name = GetGsmSitChg12m
+	random = no
+	text = {
+		localization_key = GSM_SIT_C12_Z
+		trigger = { event_target:gsm_exchange = { check_variable = { which = gsm_d_chg12m value = 0 } } }
+	}
+	text = {
+		localization_key = GSM_SIT_C12_UR
+		trigger = { event_target:gsm_exchange = { check_variable = { which = gsm_d_chg12m value >= 0 } } owner = { NOT = { has_country_flag = gsm_ui_green_up } } }
+	}
+	text = {
+		localization_key = GSM_SIT_C12_UG
+		trigger = { event_target:gsm_exchange = { check_variable = { which = gsm_d_chg12m value >= 0 } } }
+	}
+	text = {
+		localization_key = GSM_SIT_C12_DG
+		trigger = { owner = { NOT = { has_country_flag = gsm_ui_green_up } } }
+	}
+	default = GSM_SIT_C12_DR
+}
+defined_text = {
+	name = GetGsmSitRegime
+	random = no
+	text = {
+		localization_key = GSM_REGIME_BULL
+		trigger = { event_target:gsm_exchange = { check_variable = { which = gsm_regime value = 1 } } owner = { NOT = { has_country_flag = gsm_ui_green_up } } }
+	}
+	text = {
+		localization_key = GSM_REGIME_BULL_G
+		trigger = { event_target:gsm_exchange = { check_variable = { which = gsm_regime value = 1 } } }
+	}
+	text = {
+		localization_key = GSM_REGIME_BEAR
+		trigger = { event_target:gsm_exchange = { check_variable = { which = gsm_regime value = 3 } } owner = { NOT = { has_country_flag = gsm_ui_green_up } } }
+	}
+	text = {
+		localization_key = GSM_REGIME_BEAR_G
+		trigger = { event_target:gsm_exchange = { check_variable = { which = gsm_regime value = 3 } } }
+	}
+	default = GSM_REGIME_NEUTRAL
+}

@@ -1,0 +1,4 @@
+﻿l_english:
+ subject_holding:0 "Overlord / Corporate Branches"
+ HOLDINGS_EMPTY_subject_holding:0 "No Overlord holdings or corporate branches"
+ HOLDINGS_DESC_subject_holding:0 "['concept_overlord_holding'] can only be built by §HOverlords§! on §HSubject§! colonies if agreed upon in their ['concept_subject_agreement']. §HCorporate branches§! of the Galactic Securities Exchange show the industries of the companies operating on this planet."
